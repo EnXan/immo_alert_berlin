@@ -74,7 +74,21 @@ async def crawl_properties(url_list: list):
             if data and isinstance(data, list) and len(data) > 0:
                 property_info = data[0]
                 property_info["url"] = result.url
-                all_properties.append(property_info)
+                
+                # Filter für 2-3 Zimmer
+                rooms_text = property_info.get('rooms', '').strip()
+                if rooms_text:
+                    try:
+                        # Extrahiere Zahl aus dem Text (z.B. "2 Zimmer" -> 2)
+                        rooms_number = float(rooms_text.split()[0].replace(',', '.'))
+                        if 2 <= rooms_number <= 3:
+                            all_properties.append(property_info)
+                    except (ValueError, IndexError):
+                        # Wenn keine gültige Zahl gefunden wird, trotzdem hinzufügen
+                        all_properties.append(property_info)
+                else:
+                    # Wenn keine Zimmer-Info vorhanden ist, trotzdem hinzufügen
+                    all_properties.append(property_info)
         else:
             print(f"Fehler bei {result.url}: {result.error_message}")
     
@@ -88,6 +102,44 @@ async def crawl_list():
     })
     
     all_links = set()
+
+    js_filter_interaction = """
+    // Wait for page to load
+    await new Promise(resolve => setTimeout(resolve, 2000));
+    
+    // 1. First click on the preliminary element
+    const preliminaryElement = document.querySelector('#openimmo-search-form > div:nth-child(5) > div:nth-child(1) > div > div:nth-child(1) > div > div > div > label > span.on');
+    if (preliminaryElement) {
+        preliminaryElement.click();
+        await new Promise(resolve => setTimeout(resolve, 500));
+    }
+    
+    // 2. Handle price dropdown
+    const priceDropdown = document.querySelector('#uid-search-price-rental');
+    if (priceDropdown) {
+        priceDropdown.click();
+        await new Promise(resolve => setTimeout(resolve, 500));
+        
+        const priceOption = document.querySelector('#form-multiselect-search-price-warm > div > fieldset:nth-child(1) > div > label:nth-child(6) > span.form-toggle__label');
+        if (priceOption) {
+            priceOption.click();
+        }
+    }
+    
+    await new Promise(resolve => setTimeout(resolve, 1000));
+    
+    // Wait for any form updates to process
+    await new Promise(resolve => setTimeout(resolve, 1000));
+    
+    // 3. Click the search button
+    const searchButton = document.querySelector('#openimmo-search-form > div:nth-child(8) > div > div:nth-child(1) > button.btn.btn--prim.btn--lg.btn--immosearch');
+    if (searchButton) {
+        searchButton.click();
+    }
+    
+    // Wait for search results to load
+    await new Promise(resolve => setTimeout(resolve, 2000));
+    """
     
     async with AsyncWebCrawler(config=BrowserConfig(headless=True)) as crawler:
         # Erste Seite
@@ -96,6 +148,7 @@ async def crawl_list():
             config=CrawlerRunConfig(
                 cache_mode=CacheMode.BYPASS,
                 extraction_strategy=css_strategy,
+                js_code=js_filter_interaction,
                 session_id="session",
                 wait_for="css:article.article-list__item--immosearch"
             )

@@ -3,7 +3,7 @@ A tool for fetching new properties from different portals in Berlin and alerting
 
 
 ## Observed Property hubs
-- Degewo
+- Degewo [x]
 - GESOBAU
 - Gewobag
 - HOWOGE

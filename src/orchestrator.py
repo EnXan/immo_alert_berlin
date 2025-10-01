@@ -7,6 +7,7 @@ import os
 def check_new_properties():
     db = ListingDatabase()
     properties =  asyncio.run(crawl())
+    print(f"Crawled {len(properties)} properties.")
     results = db.sync_listings(properties)
     return results
 
