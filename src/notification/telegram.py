@@ -13,13 +13,13 @@ class TelegramNotifier:
         message = f"""
         🆕 <b>Neue Wohnung gefunden!</b>
 
-        📍 {listing['title']}
-        📌 {listing['address']}
-        💰 {listing['price']}
-        🏠 {listing['rooms']} Zimmer, {listing['size']}
-        🎫 WBS: {listing['wbs_required']}
+        📍 {listing.get('title', 'Nicht verfügbar')}
+        📌 {listing.get('address', 'Nicht verfügbar')}
+        💰 {listing.get('price', 'Nicht verfügbar')}
+        🏠 {listing.get('rooms', 'Nicht verfügbar')} Zimmer, {listing.get('size', 'Nicht verfügbar')}
+        🎫 WBS: {listing.get('wbs_required', 'Nicht verfügbar')}
 
-        🔗 <a href="{listing['url']}">Zur Wohnung</a>
+        🔗 <a href="{listing.get('url', '#')}">Zur Wohnung</a>
         """
         return self._send_message(message)
     
@@ -27,12 +27,12 @@ class TelegramNotifier:
         message = f"""
         ❌ <b>Wohnung nicht mehr verfügbar</b>
 
-        📍 {listing['title']}
-        📌 {listing['address']}
-        💰 {listing['price']}
-        🏠 {listing['rooms']} Zimmer
+        📍 {listing.get('title', 'Nicht verfügbar')}
+        📌 {listing.get('address', 'Nicht verfügbar')}
+        💰 {listing.get('price', 'Nicht verfügbar')}
+        🏠 {listing.get('rooms', 'Nicht verfügbar')} Zimmer
 
-        ⏰ War verfügbar seit: {listing.get('first_seen', 'Unknown')}
+        ⏰ War verfügbar seit: {listing.get('first_seen', 'Nicht verfügbar')}
         """
         return self._send_message(message)
     
@@ -40,13 +40,13 @@ class TelegramNotifier:
         message = f"""
         💰 <b>Preisänderung!</b>
 
-        📍 {update['listing']['title']}
-        📌 {update['listing']['address']}
+        📍 {update['listing'].get('title', 'Nicht verfügbar')}
+        📌 {update['listing'].get('address', 'Nicht verfügbar')}
 
-        Alter Preis: {update['old_price']}
-        Neuer Preis: {update['new_price']}
+        Alter Preis: {update.get('old_price', 'Nicht verfügbar')}
+        Neuer Preis: {update.get('new_price', 'Nicht verfügbar')}
 
-        🔗 <a href="{update['listing']['url']}">Zur Wohnung</a>
+        🔗 <a href="{update['listing'].get('url', '#')}">Zur Wohnung</a>
         """
         return self._send_message(message)
     

@@ -4,10 +4,10 @@ A tool for fetching new properties from different portals in Berlin and alerting
 
 ## Observed Property hubs
 - Degewo [x]
-- GESOBAU
-- Gewobag
-- HOWOGE
+- GESOBAU [x]
+- Gewobag [x]
+- HOWOGE [x]
 - Stadt und Land
-- WBM
+- WBM [x]
 - Vonovia
 - TAG Wohnen
