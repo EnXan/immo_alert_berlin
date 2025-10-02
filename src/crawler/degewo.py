@@ -75,6 +75,19 @@ async def crawl_properties(url_list: list):
                 property_info = data[0]
                 property_info["url"] = result.url
                 
+                # Bereinige alle Text-Felder von Whitespace
+                for key, value in property_info.items():
+                    if isinstance(value, str):
+                        # Entferne \n, \t, überflüssige Leerzeichen
+                        property_info[key] = ' '.join(value.split())
+                
+                # Spezielle Bereinigung für Adresse
+                if 'address' in property_info:
+                    address = property_info['address']
+                    # Ersetze " | " durch ", "
+                    address = address.replace(' | ', ', ')
+                    property_info['address'] = address
+                
                 # Filter für 2-3 Zimmer
                 rooms_text = property_info.get('rooms', '').strip()
                 if rooms_text:

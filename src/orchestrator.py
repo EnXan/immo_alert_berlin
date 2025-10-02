@@ -1,4 +1,4 @@
-from src.crawler import degewo, gesobau, gewobag, howoge, wbm
+from src.crawler import degewo, gesobau, gewobag, howoge, wbm, vonovia, stadtundland
 
 import asyncio
 from database.database import ListingDatabase
@@ -6,17 +6,19 @@ from src.notification.telegram import TelegramNotifier
 import os
 
 async def crawl_all_parallel():
-    # Führe Degewo und Gesobau parallel aus
     degewo_task = asyncio.create_task(degewo.crawl())
     gesobau_task = asyncio.create_task(gesobau.crawl())
     gewobag_task = asyncio.create_task(gewobag.crawl())
     howoge_task = asyncio.create_task(howoge.crawl())
     wbm_task = asyncio.create_task(wbm.crawl())
+    vonovia_task = asyncio.create_task(vonovia.crawl())
+    stadtundland_task = asyncio.create_task(stadtundland.crawl())
+    
     
     # Warte auf beide Ergebnisse
-    properties_degewo, properties_gesobau, properties_gewobag, properties_howoge, properties_wbm = await asyncio.gather(degewo_task, gesobau_task, gewobag_task, howoge_task, wbm_task)
+    properties_degewo, properties_gesobau, properties_gewobag, properties_howoge, properties_wbm, properties_vonovia, properties_stadtundland = await asyncio.gather(degewo_task, gesobau_task, gewobag_task, howoge_task, wbm_task, vonovia_task, stadtundland_task)
 
-    return properties_degewo + properties_gesobau + properties_gewobag + properties_howoge + properties_wbm 
+    return properties_degewo + properties_gesobau + properties_gewobag + properties_howoge + properties_wbm + properties_vonovia + properties_stadtundland
 
 def check_new_properties():
     db = ListingDatabase()
@@ -44,7 +46,6 @@ def notify_via_telegram(results):
         notifier.send_removed_listing(listing)
     for update in results['updated']:
         notifier.send_price_update(update)
-    notifier.send_summary(results)
 
 if __name__ == "__main__":
     results = check_new_properties()

@@ -81,6 +81,15 @@ async def crawl_properties(url_list: list):
                         # Entferne \n, \t, überflüssige Leerzeichen
                         property_info[key] = ' '.join(value.split())
                 
+                # Spezielle Bereinigung für Adresse (falls vorhanden)
+                if 'address' in property_info and property_info['address']:
+                    address = property_info['address']
+                    # Standardisiere Adressformat
+                    import re
+                    # Komma vor Postleitzahl normalisieren
+                    address = re.sub(r',\s*(\d{5})', r', \1', address)
+                    property_info['address'] = address
+                
                 # Spezielle Bereinigung für WBS-Feld: extrahiere nur "Ja" oder "Nein"
                 wbs_text = property_info.get('wbs_required', '').strip().lower()
                 if wbs_text:

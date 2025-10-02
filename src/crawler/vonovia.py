@@ -13,32 +13,32 @@ async def crawl():
 async def crawl_properties(url_list: list):
 
     css_strategy = JsonCssExtractionStrategy(schema={
-    "name": "www.howoge.de Schema",
+    "name": "www.vonovia.de Schema",
     "baseSelector": "body",
     "fields": [
         {
         "name": "title",
-        "selector": "#main > div.ce-wrapper.flat-detail__stage.background-color-petrol-brighter > div > div.data > h1",
+        "selector": "body > div.template > div > div > div > div.estate-detail-page > div.real-estate-hero > div:nth-child(1) > div.content-card > div.content > div.headlines > h1",
         "type": "text"
         },
         {
         "name": "address",
-        "selector": "#main > div.ce-wrapper.flat-detail__stage.background-color-petrol-brighter > div > div.data > div > p",
+        "selector": "body > div.template > div > div > div > div.estate-detail-page > div.real-estate-hero > div:nth-child(1) > div.wrapper > div > a > span",
         "type": "text"
         },
         {
         "name": "price",
-        "selector": "#main > div.ce-wrapper.flat-detail__stage.background-color-petrol-brighter > div > div.data > dl > div:nth-child(1) > dd",
+        "selector": "body > div.template > div > div > div > div.estate-detail-page > div.container > main > div.side-left > div.real-estate-numbers > div:nth-child(2) > div > div > div > div",
         "type": "text"
         },
         {
         "name": "rooms",
-        "selector": "#main > div.ce-wrapper.flat-detail__stage.background-color-petrol-brighter > div > div.data > dl > div:nth-child(3) > dd",
+        "selector": "body > div.template > div > div > div > div.estate-detail-page > div.container > main > div.side-left > div.real-estate-numbers > div:nth-child(5) > div > div > div > div",
         "type": "text"
         },
         {
         "name": "size",
-        "selector": "#main > div.ce-wrapper.flat-detail__stage.background-color-petrol-brighter > div > div.data > dl > div:nth-child(2) > dd",
+        "selector": "body > div.template > div > div > div > div.estate-detail-page > div.container > main > div.side-left > div.real-estate-numbers > div:nth-child(3) > div > div > div > div",
         "type": "text"
         },
         {
@@ -81,18 +81,35 @@ async def crawl_properties(url_list: list):
                         # Entferne \n, \t, überflüssige Leerzeichen
                         property_info[key] = ' '.join(value.split())
                 
-                # Spezielle Bereinigung für Adresse
-                if 'address' in property_info:
+                # Spezielle Bereinigung für Adresse (falls vorhanden)
+                if 'address' in property_info and property_info['address']:
                     address = property_info['address']
-                    # Entferne "Adresse:" Prefix
-                    address = address.replace('Adresse:', '').strip()
-                    # Ersetze Komma vor Postleitzahl durch normales Leerzeichen
+                    # Standardisiere Adressformat
                     import re
-                    address = re.sub(r',\s*(\d{5})', r' \1', address)
+                    # Komma vor Postleitzahl normalisieren
+                    address = re.sub(r',\s*(\d{5})', r', \1', address)
                     property_info['address'] = address
                 
-                # Filter für max. 900€ Miete
+                # Filter für 2-3 Zimmer UND max. 900€
+                rooms_text = property_info.get('rooms', '').strip()
                 price_text = property_info.get('price', '').strip()
+                
+                # Zimmer-Filter
+                rooms_ok = False
+                if rooms_text:
+                    try:
+                        # Extrahiere Zahl aus dem Text (z.B. "2 Zimmer" -> 2)
+                        import re
+                        rooms_match = re.search(r'([0-9,.]+)', rooms_text.replace(',', '.'))
+                        if rooms_match:
+                            rooms_number = float(rooms_match.group(1))
+                            if 2 <= rooms_number <= 3:
+                                rooms_ok = True
+                    except (ValueError, AttributeError):
+                        pass
+                
+                # Preis-Filter
+                price_ok = False
                 if price_text:
                     try:
                         # Extrahiere Zahl aus dem Text (z.B. "850,50 €" -> 850.50)
@@ -101,15 +118,15 @@ async def crawl_properties(url_list: list):
                         if price_match:
                             price_number = float(price_match.group(1))
                             if price_number <= 900:
-                                all_properties.append(property_info)
-                        else:
-                            # Wenn keine Zahl gefunden wird, trotzdem hinzufügen
-                            all_properties.append(property_info)
+                                price_ok = True
                     except (ValueError, AttributeError):
-                        # Bei Fehlern trotzdem hinzufügen
-                        all_properties.append(property_info)
-                else:
-                    # Wenn keine Preis-Info vorhanden ist, trotzdem hinzufügen
+                        pass
+                
+                # Nur hinzufügen wenn beide Filter erfüllt sind
+                if rooms_ok and price_ok:
+                    all_properties.append(property_info)
+                elif not rooms_text and not price_text:
+                    # Fallback: Wenn keine Daten vorhanden sind, trotzdem hinzufügen
                     all_properties.append(property_info)
         else:
             print(f"Fehler bei {result.url}: {result.error_message}")
@@ -119,43 +136,23 @@ async def crawl_properties(url_list: list):
 
 async def crawl_list():
     css_strategy = JsonCssExtractionStrategy(schema={
-        "baseSelector": "div.content > div.address",
-        "fields": [{"name": "link","selector": "a.flat-single--link","type": "attribute","attribute": "href"}]
+        "baseSelector": "div.headlines > h2.h4.headline",
+        "fields": [{"name": "link", "selector": "a", "type": "attribute", "attribute": "href"}]
     })
     
     all_links = set()
 
-    js_filter_interaction = """
-    // Wait for page to load
-    await new Promise(resolve => setTimeout(resolve, 2000));
-    
-    // 1. Click on 2 rooms filter
-    const roomsButton = document.querySelector('#rooms-2');
-    if (roomsButton) {
-        roomsButton.click();
-        await new Promise(resolve => setTimeout(resolve, 500));
-    }
-    
-    // 2. Click the search submit button
-    const searchSubmitButton = document.querySelector('#flat-search-filter--form > div.container > div.filters > div > div.col-12.col-lg-2.col__submit.d-flex.align-items-end > button');
-    if (searchSubmitButton) {
-        searchSubmitButton.click();
-    }
-    
-    // Wait for search results to load
-    await new Promise(resolve => setTimeout(resolve, 3000));
-    """
+
     
     async with AsyncWebCrawler(config=BrowserConfig(headless=True)) as crawler:
         # Erste Seite
         result = await crawler.arun(
-            url="https://www.howoge.de/immobiliensuche/wohnungssuche.html",
+            url="https://www.vonovia.de/zuhause-finden/immobilien?rentType=miete&city=Berlin&lift=0&parking=0&cellar=0&immoType=wohnung&priceMax=700&minRooms=0&floor=Beliebig&bathtub=0&bathwindow=0&bathshower=0&furnished=0&kitchenEBK=0&toiletSeparate=0&disabilityAccess=egal&seniorFriendly=0&balcony=egal&garden=0&subsidizedHousingPermit=egal&scroll=true",
             config=CrawlerRunConfig(
                 cache_mode=CacheMode.BYPASS,
                 extraction_strategy=css_strategy,
-                js_code=js_filter_interaction,
                 session_id="session",
-                wait_for="#immoobject-list-2 > div"
+                wait_for="css:.teaser-xl-container, .list-real-estate, .headlines"
             )
         )
         
@@ -166,7 +163,7 @@ async def crawl_list():
     all_urls = []
     
     for link in all_links:
-        all_urls.append(f"https://www.howoge.de/{link}" if not link.startswith('http') else link)
+        all_urls.append(f"https://www.vonovia.de{link}" if not link.startswith('http') else link)
 
     return all_urls
 

@@ -9,5 +9,4 @@ A tool for fetching new properties from different portals in Berlin and alerting
 - HOWOGE [x]
 - Stadt und Land
 - WBM [x]
-- Vonovia
-- TAG Wohnen
+- Vonovia [x]
