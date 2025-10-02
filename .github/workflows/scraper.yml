@@ -6,9 +6,6 @@ on:
     - cron: '0, 5-18 * * 1-5'
   
   workflow_dispatch:  # Manueller Trigger
-  
-  push:
-    branches: [main]
 
 jobs:
   scrape:

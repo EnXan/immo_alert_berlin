@@ -42,8 +42,9 @@ def notify_via_telegram(results):
     notifier = TelegramNotifier(channel_id)
     for listing in results['new']:
         notifier.send_new_listing(listing)
-    for listing in results['removed']:
-        notifier.send_removed_listing(listing)
+    # Removed notifications are disabled - too noisy
+    # for listing in results['removed']:
+    #     notifier.send_removed_listing(listing)
     for update in results['updated']:
         notifier.send_price_update(update)
 
