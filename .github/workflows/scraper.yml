@@ -19,6 +19,7 @@ jobs:
       uses: actions/checkout@v4
       with:
         token: ${{ secrets.GITHUB_TOKEN }}
+        fetch-depth: 0
     
     - name: Pull latest changes
       run: |
@@ -50,13 +51,31 @@ jobs:
         TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
         TELEGRAM_CHANNEL_ID: ${{ secrets.TELEGRAM_CHANNEL_ID }}
       run: |
+        echo "🚀 Starting scraper..."
         uv run python -m src.orchestrator
+        echo "✅ Scraper finished"
+    
+    # Debug: Check what files changed
+    - name: Check file changes
+      run: |
+        echo "📁 Files in database directory:"
+        ls -la database/
+        echo "🔍 Git status:"
+        git status
+        echo "📝 Git diff:"
+        git diff database/
     
     # Änderungen committen
     - name: Commit database changes
       run: |
-        git add database/database.json database/archive.json || true
-        git diff --staged --quiet || (
-          git commit -m "🏠 Update listings - $(date +'%Y-%m-%d %H:%M')" &&
+        # Alle Änderungen im database/ Ordner hinzufügen
+        git add database/ || true
+        
+        if ! git diff --staged --quiet; then
+          echo "📝 Changes detected, committing..."
+          git commit -m "🏠 Update listings - $(date +'%Y-%m-%d %H:%M')"
           git push origin main
-        )
+          echo "✅ Changes pushed successfully"
+        else
+          echo "ℹ️  No changes to commit"
+        fi

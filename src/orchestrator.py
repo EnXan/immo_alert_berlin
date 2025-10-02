@@ -48,5 +48,8 @@ def notify_via_telegram(results):
         notifier.send_price_update(update)
 
 if __name__ == "__main__":
+    print("🚀 Starting property check...")
     results = check_new_properties()
+    print(f"📊 Results: {results['total_active']} active, {len(results['new'])} new, {len(results['removed'])} removed, {len(results['updated'])} updated")
     notify_via_telegram(results)
+    print("✅ Finished!")
