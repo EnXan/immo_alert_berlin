@@ -142,7 +142,7 @@ async def crawl_list():
                 extraction_strategy=css_strategy,
                 js_code=js_filter_interaction,
                 session_id="session",
-                wait_for="css:#tx-solr-search > div.results-list.list-group.teaserList.teaserList--small > div"
+                wait_for="css:.basicTeaser__content, .teaserList, #tx-solr-search"
             )
         )
         
@@ -160,7 +160,7 @@ async def crawl_list():
                     session_id="session",
                     js_code="document.querySelector('#tx-solr-search > nav > ul > li:nth-child(2) > a')?.click()",
                     js_only=True,
-                    wait_for="css:#tx-solr-search > div.results-list.list-group.teaserList.teaserList--small > div",
+                    wait_for="css:.basicTeaser__content, .teaserList, #tx-solr-search",
                 )
             )
             
