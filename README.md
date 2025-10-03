@@ -463,4 +463,3 @@ This tool is for **personal use only**. Please:
 **Good luck with your apartment hunt! 🏠🔑**
 
 *Found this helpful? Star the repo ⭐ and share with friends looking for apartments in Berlin!*
-```
