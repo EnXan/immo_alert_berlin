@@ -8,7 +8,7 @@
     "wbs_required": "Nein",
     "url": "https://www.degewo.de/immosuche/details/zwei-zimmer-mit-ausblick-1",
     "first_seen": "2025-10-02T11:26:37.962613",
-    "last_seen": "2025-10-02T18:27:53.598753",
+    "last_seen": "2025-10-03T05:19:58.040969",
     "status": "active"
   },
   "https://www.degewo.de/immosuche/details/nachmieter-gesucht-wbs-mit-besonderen-wohnbedarf-1": {
@@ -20,7 +20,7 @@
     "wbs_required": "Ja",
     "url": "https://www.degewo.de/immosuche/details/nachmieter-gesucht-wbs-mit-besonderen-wohnbedarf-1",
     "first_seen": "2025-10-02T11:26:37.962632",
-    "last_seen": "2025-10-02T18:27:53.598760",
+    "last_seen": "2025-10-03T05:19:58.040996",
     "status": "active"
   },
   "https://www.degewo.de/immosuche/details/erstbezug-im-degewo-klimahaus-mit-wbs-140-mit-besonderem-wohnbedarf": {
@@ -32,7 +32,7 @@
     "wbs_required": "Ja",
     "url": "https://www.degewo.de/immosuche/details/erstbezug-im-degewo-klimahaus-mit-wbs-140-mit-besonderem-wohnbedarf",
     "first_seen": "2025-10-02T11:26:37.962638",
-    "last_seen": "2025-10-02T18:27:53.598758",
+    "last_seen": "2025-10-03T05:19:58.040981",
     "status": "active"
   },
   "https://www.degewo.de/immosuche/details/lichtenrade-ruft-1": {
@@ -44,18 +44,7 @@
     "wbs_required": "Nein",
     "url": "https://www.degewo.de/immosuche/details/lichtenrade-ruft-1",
     "first_seen": "2025-10-02T11:26:37.962639",
-    "last_seen": "2025-10-02T18:27:53.598756",
-    "status": "active"
-  },
-  "https://www.gewobag.de/fuer-mietinteressentinnen/mietangebote/0100-02571-0205-0496/": {
-    "title": "2 Zimmerwohnung mit WBS bis 160% für 2 Zimmer oder > 50m²",
-    "address": "Dolgenseestr. 9c, 10319 Berlin",
-    "price": "684,62 Euro",
-    "rooms": "2",
-    "size": "59,24 m²",
-    "url": "https://www.gewobag.de/fuer-mietinteressentinnen/mietangebote/0100-02571-0205-0496/",
-    "first_seen": "2025-10-02T11:26:37.962642",
-    "last_seen": "2025-10-02T18:27:53.598764",
+    "last_seen": "2025-10-03T05:19:58.040993",
     "status": "active"
   },
   "https://www.howoge.de//immobiliensuche/wohnungssuche/detail/1770-24064-2.html": {
@@ -66,7 +55,7 @@
     "size": "52,7 m²",
     "url": "https://www.howoge.de//immobiliensuche/wohnungssuche/detail/1770-24064-2.html",
     "first_seen": "2025-10-02T11:26:37.962648",
-    "last_seen": "2025-10-02T18:27:53.598774",
+    "last_seen": "2025-10-03T05:19:58.041020",
     "status": "active"
   },
   "https://www.howoge.de//immobiliensuche/wohnungssuche/detail/1770-24048-64.html": {
@@ -77,7 +66,7 @@
     "size": "69,6 m²",
     "url": "https://www.howoge.de//immobiliensuche/wohnungssuche/detail/1770-24048-64.html",
     "first_seen": "2025-10-02T11:26:37.962650",
-    "last_seen": "2025-10-02T18:27:53.598782",
+    "last_seen": "2025-10-03T05:19:58.041028",
     "status": "active"
   },
   "https://www.howoge.de//immobiliensuche/wohnungssuche/detail/1770-20518-20.html": {
@@ -88,7 +77,7 @@
     "size": "62,2 m²",
     "url": "https://www.howoge.de//immobiliensuche/wohnungssuche/detail/1770-20518-20.html",
     "first_seen": "2025-10-02T11:26:37.962651",
-    "last_seen": "2025-10-02T18:27:53.598780",
+    "last_seen": "2025-10-03T05:19:58.041026",
     "status": "active"
   },
   "https://www.howoge.de//immobiliensuche/wohnungssuche/detail/1771-12444-9992.html": {
@@ -99,7 +88,7 @@
     "size": "47,0 m²",
     "url": "https://www.howoge.de//immobiliensuche/wohnungssuche/detail/1771-12444-9992.html",
     "first_seen": "2025-10-02T11:26:37.962654",
-    "last_seen": "2025-10-02T18:27:53.598789",
+    "last_seen": "2025-10-03T05:19:58.041031",
     "status": "active"
   },
   "https://www.howoge.de//immobiliensuche/wohnungssuche/detail/1770-27686-299.html": {
@@ -110,7 +99,7 @@
     "size": "54,0 m²",
     "url": "https://www.howoge.de//immobiliensuche/wohnungssuche/detail/1770-27686-299.html",
     "first_seen": "2025-10-02T11:26:37.962655",
-    "last_seen": "2025-10-02T18:27:53.598783",
+    "last_seen": "2025-10-03T05:19:58.041017",
     "status": "active"
   },
   "https://www.howoge.de//immobiliensuche/wohnungssuche/detail/1771-12444-9994.html": {
@@ -121,7 +110,7 @@
     "size": "70,0 m²",
     "url": "https://www.howoge.de//immobiliensuche/wohnungssuche/detail/1771-12444-9994.html",
     "first_seen": "2025-10-02T11:26:37.962656",
-    "last_seen": "2025-10-02T18:27:53.598791",
+    "last_seen": "2025-10-03T05:19:58.041034",
     "status": "active"
   },
   "https://www.howoge.de//immobiliensuche/wohnungssuche/detail/1771-12444-9996.html": {
@@ -132,7 +121,7 @@
     "size": "83,0 m²",
     "url": "https://www.howoge.de//immobiliensuche/wohnungssuche/detail/1771-12444-9996.html",
     "first_seen": "2025-10-02T11:26:37.962658",
-    "last_seen": "2025-10-02T18:27:53.598792",
+    "last_seen": "2025-10-03T05:19:58.041036",
     "status": "active"
   },
   "https://www.howoge.de//immobiliensuche/wohnungssuche/detail/1771-12444-9993.html": {
@@ -143,7 +132,7 @@
     "size": "54,0 m²",
     "url": "https://www.howoge.de//immobiliensuche/wohnungssuche/detail/1771-12444-9993.html",
     "first_seen": "2025-10-02T11:26:37.962659",
-    "last_seen": "2025-10-02T18:27:53.598787",
+    "last_seen": "2025-10-03T05:19:58.041032",
     "status": "active"
   },
   "https://www.howoge.de//immobiliensuche/wohnungssuche/detail/1771-13493-5.html": {
@@ -154,7 +143,7 @@
     "size": "45,8 m²",
     "url": "https://www.howoge.de//immobiliensuche/wohnungssuche/detail/1771-13493-5.html",
     "first_seen": "2025-10-02T11:26:37.962662",
-    "last_seen": "2025-10-02T18:27:53.598794",
+    "last_seen": "2025-10-03T05:19:58.041037",
     "status": "active"
   },
   "https://www.howoge.de//immobiliensuche/wohnungssuche/detail/1771-13592-12.html": {
@@ -165,7 +154,7 @@
     "size": "69,5 m²",
     "url": "https://www.howoge.de//immobiliensuche/wohnungssuche/detail/1771-13592-12.html",
     "first_seen": "2025-10-02T11:26:37.962663",
-    "last_seen": "2025-10-02T18:27:53.598795",
+    "last_seen": "2025-10-03T05:19:58.041039",
     "status": "active"
   },
   "https://stadtundland.de/wohnungssuche/1050/5259/00107": {
@@ -176,7 +165,7 @@
     "size": "60.81 m²",
     "url": "https://stadtundland.de/wohnungssuche/1050/5259/00107",
     "first_seen": "2025-10-02T11:26:37.962665",
-    "last_seen": "2025-10-02T18:27:53.598824",
+    "last_seen": "2025-10-03T05:19:58.041057",
     "status": "active"
   },
   "https://stadtundland.de/wohnungssuche/1001/7318/00002": {
@@ -187,7 +176,7 @@
     "size": "54.09 m²",
     "url": "https://stadtundland.de/wohnungssuche/1001/7318/00002",
     "first_seen": "2025-10-02T11:26:37.962667",
-    "last_seen": "2025-10-02T18:27:53.598820",
+    "last_seen": "2025-10-03T05:19:58.041060",
     "status": "active"
   },
   "https://stadtundland.de/wohnungssuche/1001/0205/00431": {
@@ -198,7 +187,7 @@
     "size": "65.29 m²",
     "url": "https://stadtundland.de/wohnungssuche/1001/0205/00431",
     "first_seen": "2025-10-02T11:26:37.962668",
-    "last_seen": "2025-10-02T18:27:53.598818",
+    "last_seen": "2025-10-03T05:19:58.041048",
     "status": "active"
   },
   "https://www.gewobag.de/fuer-mietinteressentinnen/mietangebote/0100-01712-0201-0017/": {
@@ -209,18 +198,7 @@
     "size": "67,52 m²",
     "url": "https://www.gewobag.de/fuer-mietinteressentinnen/mietangebote/0100-01712-0201-0017/",
     "first_seen": "2025-10-02T09:41:43.598376",
-    "last_seen": "2025-10-02T18:27:53.598768",
-    "status": "active"
-  },
-  "https://stadtundland.de/wohnungssuche/1050/5150/00024": {
-    "title": "2 Zimmer / 56,38 m² – Tangermünder Str. 4, 6. Etage rechts- ohne Fahrstuhl",
-    "address": "Tangermünder Str. 4, 12627 Berlin",
-    "price": "583.61 €",
-    "rooms": "2.00",
-    "size": "56.38 m²",
-    "url": "https://stadtundland.de/wohnungssuche/1050/5150/00024",
-    "first_seen": "2025-10-02T10:20:53.062933",
-    "last_seen": "2025-10-02T18:27:53.598825",
+    "last_seen": "2025-10-03T05:19:58.041003",
     "status": "active"
   },
   "https://stadtundland.de/wohnungssuche/1050/5259/00108": {
@@ -231,7 +209,7 @@
     "size": "60.91 m²",
     "url": "https://stadtundland.de/wohnungssuche/1050/5259/00108",
     "first_seen": "2025-10-02T12:36:33.251232",
-    "last_seen": "2025-10-02T18:27:53.598827",
+    "last_seen": "2025-10-03T05:19:58.041062",
     "status": "active"
   },
   "https://stadtundland.de/wohnungssuche/1050/5259/00124": {
@@ -242,7 +220,7 @@
     "size": "46.11 m²",
     "url": "https://stadtundland.de/wohnungssuche/1050/5259/00124",
     "first_seen": "2025-10-02T12:36:33.251236",
-    "last_seen": "2025-10-02T18:27:53.598822",
+    "last_seen": "2025-10-03T05:19:58.041059",
     "status": "active"
   },
   "https://www.degewo.de/immosuche/details/hochparterre-wohnung-sucht-sie": {
@@ -254,7 +232,7 @@
     "wbs_required": "Nein",
     "url": "https://www.degewo.de/immosuche/details/hochparterre-wohnung-sucht-sie",
     "first_seen": "2025-10-02T13:27:19.268799",
-    "last_seen": "2025-10-02T18:27:53.598750",
+    "last_seen": "2025-10-03T05:19:58.041000",
     "status": "active"
   },
   "https://www.howoge.de//immobiliensuche/wohnungssuche/detail/1770-20210-6.html": {
@@ -265,7 +243,7 @@
     "size": "52,5 m²",
     "url": "https://www.howoge.de//immobiliensuche/wohnungssuche/detail/1770-20210-6.html",
     "first_seen": "2025-10-02T13:27:19.268811",
-    "last_seen": "2025-10-02T18:27:53.598772",
+    "last_seen": "2025-10-03T05:19:58.041013",
     "status": "active"
   },
   "https://www.gewobag.de/fuer-mietinteressentinnen/mietangebote/0100-01711-0204-0120/": {
@@ -276,7 +254,7 @@
     "size": "67,08 m²",
     "url": "https://www.gewobag.de/fuer-mietinteressentinnen/mietangebote/0100-01711-0204-0120/",
     "first_seen": "2025-10-02T14:19:15.263221",
-    "last_seen": "2025-10-02T18:27:53.598762",
+    "last_seen": "2025-10-03T05:19:58.041006",
     "status": "active"
   },
   "https://www.gewobag.de/fuer-mietinteressentinnen/mietangebote/0100-01711-0303-0158/": {
@@ -287,7 +265,7 @@
     "size": "66,98 m²",
     "url": "https://www.gewobag.de/fuer-mietinteressentinnen/mietangebote/0100-01711-0303-0158/",
     "first_seen": "2025-10-02T14:19:15.263225",
-    "last_seen": "2025-10-02T18:27:53.598770",
+    "last_seen": "2025-10-03T05:19:58.041010",
     "status": "active"
   },
   "https://www.howoge.de//immobiliensuche/wohnungssuche/detail/1771-11942-68.html": {
@@ -298,7 +276,7 @@
     "size": "51,4 m²",
     "url": "https://www.howoge.de//immobiliensuche/wohnungssuche/detail/1771-11942-68.html",
     "first_seen": "2025-10-02T14:19:15.263250",
-    "last_seen": "2025-10-02T18:27:53.598776",
+    "last_seen": "2025-10-03T05:19:58.041024",
     "status": "active"
   },
   "https://stadtundland.de/wohnungssuche/1001/5248/00007": {
@@ -309,7 +287,7 @@
     "size": "70.07 m²",
     "url": "https://stadtundland.de/wohnungssuche/1001/5248/00007",
     "first_seen": "2025-10-02T14:19:15.263264",
-    "last_seen": "2025-10-02T18:27:53.598817",
+    "last_seen": "2025-10-03T05:19:58.041055",
     "status": "active"
   },
   "https://stadtundland.de/wohnungssuche/1001/5248/00009": {
@@ -320,7 +298,7 @@
     "size": "52.87 m²",
     "url": "https://stadtundland.de/wohnungssuche/1001/5248/00009",
     "first_seen": "2025-10-02T14:19:15.263267",
-    "last_seen": "2025-10-02T18:27:53.598811",
+    "last_seen": "2025-10-03T05:19:58.041052",
     "status": "active"
   },
   "https://stadtundland.de/wohnungssuche/1001/5248/00029": {
@@ -331,7 +309,7 @@
     "size": "52.79 m²",
     "url": "https://stadtundland.de/wohnungssuche/1001/5248/00029",
     "first_seen": "2025-10-02T14:19:15.263269",
-    "last_seen": "2025-10-02T18:27:53.598809",
+    "last_seen": "2025-10-03T05:19:58.041046",
     "status": "active"
   },
   "https://stadtundland.de/wohnungssuche/1001/5248/00004": {
@@ -342,7 +320,7 @@
     "size": "40.17 m²",
     "url": "https://stadtundland.de/wohnungssuche/1001/5248/00004",
     "first_seen": "2025-10-02T14:19:15.263272",
-    "last_seen": "2025-10-02T18:27:53.598807",
+    "last_seen": "2025-10-03T05:19:58.041054",
     "status": "active"
   },
   "https://stadtundland.de/wohnungssuche/1001/5248/00003": {
@@ -353,7 +331,7 @@
     "size": "70.04 m²",
     "url": "https://stadtundland.de/wohnungssuche/1001/5248/00003",
     "first_seen": "2025-10-02T14:19:15.263275",
-    "last_seen": "2025-10-02T18:27:53.598805",
+    "last_seen": "2025-10-03T05:19:58.041043",
     "status": "active"
   },
   "https://stadtundland.de/wohnungssuche/1001/5248/00021": {
@@ -364,7 +342,7 @@
     "size": "52.56 m²",
     "url": "https://stadtundland.de/wohnungssuche/1001/5248/00021",
     "first_seen": "2025-10-02T14:19:15.263280",
-    "last_seen": "2025-10-02T18:27:53.598815",
+    "last_seen": "2025-10-03T05:19:58.041045",
     "status": "active"
   },
   "https://stadtundland.de/wohnungssuche/1001/5248/00019": {
@@ -375,40 +353,7 @@
     "size": "70.04 m²",
     "url": "https://stadtundland.de/wohnungssuche/1001/5248/00019",
     "first_seen": "2025-10-02T14:19:15.263282",
-    "last_seen": "2025-10-02T18:27:53.598813",
-    "status": "active"
-  },
-  "https://www.howoge.de//immobiliensuche/wohnungssuche/detail/1771-11942-46.html": {
-    "title": "Auch ohne WBS könnten Sie berechtigt sein für 3 Personen",
-    "address": "Leuenberger Straße 16 13055 Berlin, Alt-Hohenschönhausen",
-    "price": "712,67 €",
-    "rooms": "3",
-    "size": "68,2 m²",
-    "url": "https://www.howoge.de//immobiliensuche/wohnungssuche/detail/1771-11942-46.html",
-    "first_seen": "2025-10-02T15:20:19.980966",
-    "last_seen": "2025-10-02T18:27:53.598785",
-    "status": "active"
-  },
-  "https://www.gewobag.de/fuer-mietinteressentinnen/mietangebote/0100-02541-0101-0010/": {
-    "title": "2 Zimmerwohnung zum selber renovieren ab sofort!",
-    "address": "Finowstr. 13, 10247 Berlin",
-    "price": "612,19 Euro",
-    "rooms": "2",
-    "size": "67,73 m²",
-    "url": "https://www.gewobag.de/fuer-mietinteressentinnen/mietangebote/0100-02541-0101-0010/",
-    "first_seen": "2025-10-02T16:24:35.853849",
-    "last_seen": "2025-10-02T18:27:53.598766",
-    "status": "active"
-  },
-  "https://www.howoge.de//immobiliensuche/wohnungssuche/detail/1770-20579-8.html": {
-    "title": "Wohnung ohne WBS",
-    "address": "Franz-Mett-Straße 12 10319 Berlin, Friedrichsfelde",
-    "price": "697,74 €",
-    "rooms": "3",
-    "size": "67,9 m²",
-    "url": "https://www.howoge.de//immobiliensuche/wohnungssuche/detail/1770-20579-8.html",
-    "first_seen": "2025-10-02T16:24:35.853858",
-    "last_seen": "2025-10-02T18:27:53.598778",
+    "last_seen": "2025-10-03T05:19:58.041050",
     "status": "active"
   },
   "https://www.howoge.de//immobiliensuche/wohnungssuche/detail/1950-33560-36.html": {
@@ -419,7 +364,7 @@
     "size": "55,0 m²",
     "url": "https://www.howoge.de//immobiliensuche/wohnungssuche/detail/1950-33560-36.html",
     "first_seen": "2025-10-02T16:24:35.853882",
-    "last_seen": "2025-10-02T18:27:53.598797",
+    "last_seen": "2025-10-03T05:19:58.041041",
     "status": "active"
   },
   "https://www.degewo.de/immosuche/details/willkommen-in-oberschoeneweide": {
@@ -431,7 +376,7 @@
     "wbs_required": "Nein",
     "url": "https://www.degewo.de/immosuche/details/willkommen-in-oberschoeneweide",
     "first_seen": "2025-10-02T18:27:53.598733",
-    "last_seen": "2025-10-02T18:27:53.598743",
+    "last_seen": "2025-10-03T05:19:58.040984",
     "status": "active"
   },
   "https://www.degewo.de/immosuche/details/gut-gelegene-wohnung-direkt-gegenueber-des-fez-mit-schwimmhalle": {
@@ -443,29 +388,7 @@
     "wbs_required": "Nein",
     "url": "https://www.degewo.de/immosuche/details/gut-gelegene-wohnung-direkt-gegenueber-des-fez-mit-schwimmhalle",
     "first_seen": "2025-10-02T18:27:53.598746",
-    "last_seen": "2025-10-02T18:27:53.598748",
-    "status": "active"
-  },
-  "https://www.vonovia.de/zuhause-finden/immobilien/2-zimmer-etagenwohnung-mit-balkon-zur-miete-in-berlin-borsigwalde-515218": {
-    "title": "schöne 2-Zimmer-Wohnung im Herzen Borsigwaldes",
-    "address": "Conradstraße 31 - 13509 Berlin OT Borsigwalde",
-    "price": "855,55 €",
-    "rooms": "2",
-    "size": "54,47 m2",
-    "url": "https://www.vonovia.de/zuhause-finden/immobilien/2-zimmer-etagenwohnung-mit-balkon-zur-miete-in-berlin-borsigwalde-515218",
-    "first_seen": "2025-10-02T18:27:53.598799",
-    "last_seen": "2025-10-02T18:27:53.598800",
-    "status": "active"
-  },
-  "https://www.vonovia.de/zuhause-finden/immobilien/2-zimmer-etagenwohnung-mit-balkon-zur-miete-in-berlin-tegel-515223": {
-    "title": "schöne 2-Zimmer-Wohnung im Ziekowkiez",
-    "address": "Illerzeile 2 - 13509 Berlin OT Tegel",
-    "price": "830,96 €",
-    "rooms": "2",
-    "size": "50,12 m2",
-    "url": "https://www.vonovia.de/zuhause-finden/immobilien/2-zimmer-etagenwohnung-mit-balkon-zur-miete-in-berlin-tegel-515223",
-    "first_seen": "2025-10-02T18:27:53.598802",
-    "last_seen": "2025-10-02T18:27:53.598803",
+    "last_seen": "2025-10-03T05:19:58.040988",
     "status": "active"
   }
 }
