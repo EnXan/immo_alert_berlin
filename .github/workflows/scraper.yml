@@ -1,0 +1,77 @@
+name: Wohnungs Scraper
+
+on:
+  schedule:
+    - cron: '0, 5-18 * * 1-5'
+  
+  workflow_dispatch:  # Manueller Trigger
+
+jobs:
+  scrape:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout Repository
+      uses: actions/checkout@v4
+      with:
+        token: ${{ secrets.GITHUB_TOKEN }}
+        fetch-depth: 0
+    
+    - name: Pull latest changes
+      run: |
+        git config --global user.name "GitHub Actions Bot"
+        git config --global user.email "actions@github.com"
+        git pull origin main || true
+    
+    # UV Installation (super schnell!)
+    - name: Install uv
+      uses: astral-sh/setup-uv@v3
+      with:
+        enable-cache: true
+        cache-dependency-glob: "uv.lock"
+    
+    # Python Setup mit uv
+    - name: Set up Python
+      run: uv python install 3.12
+    
+    # Dependencies mit uv
+    - name: Install dependencies
+      run: |
+        uv sync --frozen
+        uv run playwright install chromium
+        uv run playwright install-deps chromium
+    
+    # Scraper ausführen
+    - name: Run Scraper
+      env:
+        TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+        TELEGRAM_CHANNEL_ID: ${{ secrets.TELEGRAM_CHANNEL_ID }}
+      run: |
+        echo "🚀 Starting scraper..."
+        uv run python cli.py run
+        echo "✅ Scraper finished"
+    
+    # Debug: Check what files changed
+    - name: Check file changes
+      run: |
+        echo "📁 Files in database directory:"
+        ls -la database/
+        echo "🔍 Git status:"
+        git status
+        echo "📝 Git diff:"
+        git diff database/
+    
+    # Änderungen committen
+    - name: Commit database changes
+      run: |
+        # Alle Änderungen im database/ Ordner hinzufügen
+        git add database/ || true
+        
+        if ! git diff --staged --quiet; then
+          echo "📝 Changes detected, committing..."
+          git commit -m "🏠 Update listings - $(date +'%Y-%m-%d %H:%M')"
+          git push origin main
+          echo "✅ Changes pushed successfully"
+        else
+          echo "ℹ️  No changes to commit"
+        fi
