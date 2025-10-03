@@ -1,4 +1,3 @@
-# cli.py
 import asyncio
 import click
 from pathlib import Path
@@ -11,9 +10,11 @@ def cli():
 
 
 @cli.command()
-def run():
+@click.option('--config', type=click.Path(exists=True), default='config.yaml', help='Config file path')
+def run(config):
     """Run the crawler"""
     from src.orchestrator import ImmoAlert
+    from src.config import AppConfig
     from src.crawler.degewo.degewo import DegewoCrawler
     from src.crawler.gewobag.gewobag import GewobagCrawler
     from src.crawler.gesobau.gesobau import GesobauCrawler
@@ -21,9 +22,27 @@ def run():
     from src.crawler.stadtundland.stadtundland import StadtUndLandCrawler
     from src.crawler.vonovia.vonovia import VonoviaCrawler
     from src.crawler.wbm.wbm import WBMCrawler
-    crawlers = [DegewoCrawler(), GewobagCrawler(), GesobauCrawler(), HowogeCrawler(), StadtUndLandCrawler(), VonoviaCrawler(), WBMCrawler()]
     
-    app = ImmoAlert(crawlers)
+    # Load config
+    try:
+        app_config = AppConfig.from_yaml(Path(config))
+        print(f"✅ Loaded config from {config}")
+    except FileNotFoundError:
+        print(f"⚠️  Config file not found, using environment variables")
+        app_config = AppConfig.from_env()
+    
+    # Initialize crawlers with filter config
+    crawlers = [
+        DegewoCrawler(app_config.filters),
+        GewobagCrawler(app_config.filters),
+        GesobauCrawler(app_config.filters),
+        HowogeCrawler(app_config.filters),
+        StadtUndLandCrawler(app_config.filters),
+        VonoviaCrawler(app_config.filters),
+        WBMCrawler(app_config.filters)
+    ]
+    
+    app = ImmoAlert(crawlers, str(app_config.database_path))
     asyncio.run(app.run())
 
 

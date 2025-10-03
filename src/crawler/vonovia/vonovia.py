@@ -6,7 +6,7 @@ from src.crawler.vonovia.extraction_schemas import VonoviaExtractionSchema
 from src.config import CrawlerConfig
 from crawl4ai import CrawlResult
 from typing import List, Optional
-from src.crawler.base import Property
+from database.models import Property
 from src.utils.normalize_data import normalize_property
 from src.utils.filter_property import filter_property
 
@@ -53,6 +53,7 @@ class VonoviaCrawler(BaseCrawler):
                 config=CrawlerRunConfig(
                     extraction_strategy=strategy,
                     wait_for=VonoviaExtractionSchema.WAIT_FOR_LISTING_ELEMENT,
+                    page_timeout=15000
                 )
             )
 
@@ -72,7 +73,7 @@ class VonoviaCrawler(BaseCrawler):
                 property["source"] = self.source_name
                 property = normalize_property(property)
                 
-                if filter_property(property):
+                if filter_property(property, self.filter_config):
                     properties.append(property)
             else:
                 print(f"Vonovia: No valid data from {result.url}")

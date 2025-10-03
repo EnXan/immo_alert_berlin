@@ -95,7 +95,7 @@ class GesobauCrawler(BaseCrawler):
                 property["source"] = self.source_name
                 property = normalize_property(property)
                 
-                if filter_property(property):
+                if filter_property(property, self.filter_config):
                     properties.append(property)
             else:
                 print(f"Gesobau: No valid data from {result.url}")

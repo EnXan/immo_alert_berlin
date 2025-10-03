@@ -1,4 +1,4 @@
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from typing import Optional, List
 from pathlib import Path
 import yaml
@@ -13,15 +13,19 @@ class FilterConfig:
     max_price: Optional[float] = None
     min_size: Optional[float] = None
     max_size: Optional[float] = None
-    wbs_required: Optional[bool] = None  # True, False, or None (Don't care)
-    districts: List[str] = None  # List of allowed districts, None means no filtering
+    wbs_required: Optional[bool] = None
 
 @dataclass
 class CrawlerConfig:
     """Per-crawler configuration"""
-    enabled: bool = True
-    timeout: int = 30  # seconds
-    max_retries: int = 3
+    enabled_sources: List[str] = field(default_factory=lambda: [
+        'degewo', 'gesobau', 'gewobag', 'howoge', 
+        'stadtundland', 'vonovia', 'wbm'
+    ])
+    
+    def is_enabled(self, source: str) -> bool:
+        """Check if a crawler source is enabled"""
+        return source.lower() in [s.lower() for s in self.enabled_sources]
 
 @dataclass
 class NotificationConfig:
@@ -31,7 +35,7 @@ class NotificationConfig:
     telegram_channel_id: Optional[str] = None
     notify_new_listings: bool = True
     notify_price_changes: bool = True
-    notify_removals: bool = False  # Disabled by default to reduce noise
+    notify_removals: bool = False
 
 @dataclass
 class AppConfig:
@@ -59,11 +63,14 @@ class AppConfig:
         """Load config from environment variables"""
         return cls(
             filters=FilterConfig(
-                min_rooms=float(os.getenv("MIN_ROOMS", 0)),
-                max_rooms=float(os.getenv("MAX_ROOMS", 5)),
-                max_price=float(os.getenv("MAX_PRICE", 1500)),
+                min_rooms=float(os.getenv("MIN_ROOMS", 0)) if os.getenv("MIN_ROOMS") else None,
+                max_rooms=float(os.getenv("MAX_ROOMS", 10)) if os.getenv("MAX_ROOMS") else None,
+                min_price=float(os.getenv("MIN_PRICE", 0)) if os.getenv("MIN_PRICE") else None,
+                max_price=float(os.getenv("MAX_PRICE", 1500)) if os.getenv("MAX_PRICE") else None,
             ),
-            crawlers=CrawlerConfig(
-                # TODO: Muss hier noch angepasst werden
+            crawler=CrawlerConfig(),
+            notification=NotificationConfig(
+                telegram_bot_token=os.getenv('TELEGRAM_BOT_TOKEN'),
+                telegram_channel_id=os.getenv('TELEGRAM_CHANNEL_ID')
             )
         )

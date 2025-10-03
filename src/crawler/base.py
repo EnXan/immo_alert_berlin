@@ -1,13 +1,13 @@
 from abc import ABC, abstractmethod
 from typing import List, Optional
-from src.config import CrawlerConfig
+from src.config import FilterConfig
 from database.models import Property
         
 class BaseCrawler(ABC):
     """Abstract base class for all property crawlers"""
 
-    def __init__(self, config: 'CrawlerConfig'):
-        self.config = config
+    def __init__(self, filter_config: FilterConfig = None):
+        self.filter_config = filter_config or FilterConfig()
         self.source_name = self.__class__.__name__.replace('Crawler', '').lower()
 
     @abstractmethod
@@ -20,10 +20,8 @@ class BaseCrawler(ABC):
         """Parse all listing pages for given urls"""
         pass
 
-
     async def crawl(self) -> list[Property]:
-        listing_urls = await self.get_listing_urls()
-        #properties = await self.get_all_listing_details(listing_urls)
-        #return properties
-
-
+        """Main crawl method"""
+        urls = await self.get_listing_urls()
+        properties = await self.parse_listings(urls)
+        return properties
