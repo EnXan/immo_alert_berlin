@@ -1,30 +1,18 @@
 from database.models import Property
+import re
 
 def normalize_property(data):
     """Normalize property data to ensure consistency."""
-    # Create Property object from input data (assuming data is a dict)
     if isinstance(data, dict):
-        # Convert string values to proper types before creating Property object
+        # Normalize each field
         price = _normalize_price(data.get('price', ''))
         size = _normalize_size(data.get('size', ''))
-        
-        # Handle rooms conversion
-        rooms_str = data.get('rooms', '')
-        try:
-            rooms = float(rooms_str) if rooms_str else 0.0
-        except (ValueError, TypeError):
-            rooms = 0.0
-        
-        # Handle wbs_required conversion
-        wbs_raw = data.get('wbs_required', None)
-        if isinstance(wbs_raw, str):
-            wbs_required = wbs_raw.lower() in ['benötigt', '1', 'ja', 'yes', 'true', 'nein']
-        else:
-            wbs_required = False
+        rooms = _normalize_rooms(data.get('rooms', ''))
+        wbs_required = _normalize_wbs(data.get('wbs_required', ''))
         
         property = Property(
-            title=data.get('title', 'No Title'),
-            address=data.get('address', ''),
+            title=data.get('title', 'No Title').strip(),
+            address=_normalize_address(data.get('address', '')),
             price=price,
             rooms=rooms,
             size=size,
@@ -33,51 +21,123 @@ def normalize_property(data):
             url=data.get('url', None)
         )
     else:
-        property = data  # Assume it's already a Property object
+        property = data
     
-    # Basisnormalisierung (string trimming)
-    property = _base_normalize(property)
-    
-    # Weitere spezifische Normalisierungen
-    property.address = _normalize_address(property.address)
-
     return property
 
 
-def _base_normalize(data: Property):
-    """Basic normalization steps applicable to all properties."""
-    for field in data.__dataclass_fields__:
-        value = getattr(data, field)
-        if isinstance(value, str):
-            normalized_value = value.strip()
-            setattr(data, field, normalized_value)
-    
-    return data
-
 def _normalize_address(address: str) -> str:
-    """Ensure address is a clean string."""
+    """Clean address string."""
     if not address:
         return ""
-    return ' '.join(address.split())
+    # Remove "Adresse:" prefix (from Howoge)
+    address = address.replace('Adresse:', '').strip()
+    # Clean whitespace
+    address = ' '.join(address.split())
+    # Replace pipe with comma
+    address = address.replace(' | ', ', ')
+    return address
+
 
 def _normalize_price(price: str) -> float:
-    """Ensure price has no strange characters and is a valid float."""
+    """Extract price from various formats."""
     if not price:
         return 0.0
-    cleaned_price = ''.join(c for c in price if c.isdigit() or c in {'.', ','})
-    cleaned_price = cleaned_price.replace(',', '.')
-    try:
-        return float(cleaned_price)
-    except ValueError:
-        return 0.0
     
+    # Remove common text
+    price = price.replace('EUR', '').replace('€', '').replace('Euro', '')
+    price = price.replace('Gesamt', '').replace('\xa0', ' ')
+    
+    # Remove all whitespace
+    price = ''.join(price.split())
+    
+    # Handle German number format: 1.234,56 -> 1234.56
+    # If both . and , exist, . is thousand separator
+    if '.' in price and ',' in price:
+        price = price.replace('.', '').replace(',', '.')
+    # If only comma, it's decimal separator
+    elif ',' in price:
+        price = price.replace(',', '.')
+    
+    # Extract first number found
+    match = re.search(r'(\d+\.?\d*)', price)
+    if match:
+        try:
+            return float(match.group(1))
+        except ValueError:
+            return 0.0
+    
+    return 0.0
+
+
 def _normalize_size(size: str) -> float:
-    """Ensure size has no strange characters and is a valid float."""
+    """Extract size from various formats."""
     if not size:
         return 0.0
-    cleaned_size = ''.join(c for c in size if c.isdigit() or c in {'.', ','})
-    cleaned_size = cleaned_size.replace(',', '.')
-    try:
-        return float(cleaned_size)
-    except ValueError:
+    
+    # Remove common text
+    size = size.replace('m²', '').replace('m2', '').replace('qm', '')
+    size = size.replace('Größe:', '').replace('ca.', '').replace('\xa0', ' ')
+    
+    # Remove all whitespace
+    size = ''.join(size.split())
+    
+    # Handle German number format
+    if '.' in size and ',' in size:
+        size = size.replace('.', '').replace(',', '.')
+    elif ',' in size:
+        size = size.replace(',', '.')
+    
+    # Extract first number found
+    match = re.search(r'(\d+\.?\d*)', size)
+    if match:
+        try:
+            return float(match.group(1))
+        except ValueError:
+            return 0.0
+    
+    return 0.0
+
+
+def _normalize_rooms(rooms: str) -> float:
+    """Extract room count from various formats."""
+    if not rooms:
         return 0.0
+    
+    # Remove common text
+    rooms = rooms.replace('Anzahl der Zimmer:', '').replace('Zimmer:', '')
+    rooms = rooms.strip()
+    
+    # Handle comma as decimal separator
+    rooms = rooms.replace(',', '.')
+    
+    # Extract first number found
+    match = re.search(r'(\d+\.?\d*)', rooms)
+    if match:
+        try:
+            return float(match.group(1))
+        except ValueError:
+            return 0.0
+    
+    return 0.0
+
+
+def _normalize_wbs(wbs: str) -> bool:
+    """Extract WBS requirement."""
+    if not wbs or wbs == 'N.A.':
+        return False
+    
+    wbs_lower = wbs.lower()
+    
+    # Remove prefix
+    wbs_lower = wbs_lower.replace('wbs erforderlich:', '').strip()
+    
+    # Check for positive indicators
+    if any(word in wbs_lower for word in ['ja', 'yes', 'true', 'benötigt', 'erforderlich']):
+        return True
+    
+    # Check for negative indicators
+    if any(word in wbs_lower for word in ['nein', 'no', 'false', 'nicht']):
+        return False
+    
+    return False

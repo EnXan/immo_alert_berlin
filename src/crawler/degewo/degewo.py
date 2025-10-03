@@ -94,8 +94,8 @@ class DegewoCrawler(BaseCrawler):
                 property["url"] = result.url
                 property["source"] = self.source_name
                 property = normalize_property(property)
-                
-                if filter_property(property):
+
+                if filter_property(property, self.filter_config):
                     properties.append(property)
             else:
                 print(f"Degewo: No valid data from {result.url}")

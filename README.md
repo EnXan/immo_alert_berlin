@@ -1,4 +1,6 @@
-# 🏠 immo_alert
+# Immo Alert
+
+![Immo Alert](logo.png)
 
 A smart automation tool that monitors multiple Berlin housing portals for new apartment listings and sends instant notifications via Telegram. Perfect for apartment hunters who want to be the first to know about new listings that match their criteria.
 

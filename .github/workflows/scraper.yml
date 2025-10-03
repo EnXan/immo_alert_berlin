@@ -1,4 +1,3 @@
-# .github/workflows/degewo_scraper.yml
 name: Wohnungs Scraper
 
 on:
@@ -49,7 +48,7 @@ jobs:
         TELEGRAM_CHANNEL_ID: ${{ secrets.TELEGRAM_CHANNEL_ID }}
       run: |
         echo "🚀 Starting scraper..."
-        uv run python -m src.orchestrator
+        uv run python cli.py run
         echo "✅ Scraper finished"
     
     # Debug: Check what files changed
