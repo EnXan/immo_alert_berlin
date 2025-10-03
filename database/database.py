@@ -1,97 +1,123 @@
 import json
-from datetime import datetime
 from pathlib import Path
+from typing import Dict, List
+from datetime import datetime
+from database.models import StoredProperty, Property
 
-class ListingDatabase:
-    def __init__(self):
-        self.db_path = Path("database/database.json")
-        self.db_path.parent.mkdir(exist_ok=True)
-        self.listings = self._load_db()
 
-    def _load_db(self):
-        if self.db_path.exists():
-            try:
-                with open(self.db_path, 'r', encoding='utf-8') as f:
-                    content = f.read().strip()
-                    if content:
-                        return json.loads(content)
-            except (json.JSONDecodeError, FileNotFoundError):
-                pass
-        return {}
-
-    def _save(self):
-        with open(self.db_path, 'w', encoding='utf-8') as f:
-            json.dump(self.listings, f, indent=2, ensure_ascii=False)
+class PropertyDatabase:
+    """Simple JSON file database"""
     
-    def sync_listings(self, current_listings):
+    def __init__(self, db_path: str = "database/database.json"):
+        self.db_path = Path(db_path)
+        self.db_path.parent.mkdir(exist_ok=True, parents=True)
+    
+    def load(self) -> Dict[str, StoredProperty]:
+        """Load properties from file"""
+        if not self.db_path.exists():
+            return {}
+        
+        try:
+            with open(self.db_path, 'r', encoding='utf-8') as f:
+                data = json.load(f)
+            
+            return {
+                url: StoredProperty(**prop_data)
+                for url, prop_data in data.items()
+            }
+        except Exception as e:
+            print(f"❌ Failed to load database: {e}")
+            return {}
+    
+    def save(self, properties: Dict[str, StoredProperty]) -> None:
+        """Save properties to file"""
+        try:
+            data = {url: prop.to_dict() for url, prop in properties.items()}
+            
+            with open(self.db_path, 'w', encoding='utf-8') as f:
+                json.dump(data, f, indent=2, ensure_ascii=False)
+        except Exception as e:
+            print(f"❌ Failed to save database: {e}")
+    
+    def sync(self, current_properties: List[Property]) -> Dict:
         """
-        Synchronisiert die Datenbank mit aktuellen Listings
-        - Findet neue Listings
-        - Entfernt nicht mehr vorhandene
-        - Aktualisiert bestehende
+        Sync current properties with database
+        Returns dict with new, removed, and updated properties
         """
-        new_listings = []
-        removed_listings = []
-        updated_listings = []
+        print(f"📊 Syncing {len(current_properties)} properties...")
         
-        # Erstelle Set mit aktuellen IDs
-        current_ids = set()
-        current_dict = {}
+        stored = self.load()
+        current_urls = {p.url for p in current_properties if p.url}
         
-        for listing in current_listings:
-            listing_id = listing.get('url', f"{listing['title']}_{listing['address']}")
-            current_ids.add(listing_id)
-            current_dict[listing_id] = listing
+        new_properties = []
+        updated_properties = []
+        removed_properties = []
         
-        # Finde neue und aktualisierte Listings
-        for listing_id, listing in current_dict.items():
-            if listing_id not in self.listings:
-                # Neues Listing
-                self.listings[listing_id] = {
-                    **listing,
-                    'first_seen': datetime.now().isoformat(),
-                    'last_seen': datetime.now().isoformat(),
-                    'status': 'active'
-                }
-                new_listings.append(listing)
+        # Process current properties
+        for prop in current_properties:
+            if not prop.url:
+                continue
+                
+            if prop.url not in stored:
+                # New property
+                new_prop = StoredProperty.from_property(prop)
+                stored[prop.url] = new_prop
+                new_properties.append(new_prop)
+                print(f"  🆕 New: {prop.title[:50]}")
             else:
-                # Bestehendes Listing - aktualisiere last_seen
-                self.listings[listing_id]['last_seen'] = datetime.now().isoformat()
+                # Update existing
+                existing = stored[prop.url]
+                old_price = existing.price
                 
-                # Prüfe ob sich was geändert hat (z.B. Preis)
-                old_price = self.listings[listing_id].get('price')
-                new_price = listing.get('price')
+                existing.title = prop.title
+                existing.address = prop.address
+                existing.rooms = prop.rooms
+                existing.size = prop.size
+                existing.wbs_required = prop.wbs_required
+                existing.last_seen = datetime.now().isoformat()
                 
-                if old_price != new_price:
-                    self.listings[listing_id].update(listing)
-                    self.listings[listing_id]['price_history'] = self.listings[listing_id].get('price_history', [])
-                    self.listings[listing_id]['price_history'].append({
-                        'price': old_price,
-                        'changed_at': datetime.now().isoformat()
-                    })
-                    updated_listings.append({
-                        'listing': listing,
+                if old_price != prop.price:
+                    existing.price = prop.price
+                    updated_properties.append({
+                        'property': existing,
                         'old_price': old_price,
-                        'new_price': new_price
+                        'new_price': prop.price
                     })
+                    print(f"  💰 Price changed: {prop.title[:50]} ({old_price}€ → {prop.price}€)")
         
-        # Finde entfernte Listings
-        for listing_id in list(self.listings.keys()):
-            if listing_id not in current_ids:
-                # Listing nicht mehr vorhanden
-                removed_listing = self.listings[listing_id].copy()
-                removed_listing['removed_at'] = datetime.now().isoformat()
-                removed_listings.append(removed_listing)
-                
-                # Entferne aus aktiver DB
-                del self.listings[listing_id]
+        # Find removed properties
+        for url, stored_prop in list(stored.items()):
+            if url not in current_urls and stored_prop.status == "active":
+                stored_prop.status = "removed"
+                stored_prop.last_seen = datetime.now().isoformat()
+                removed_properties.append(stored_prop)
+                print(f"  ❌ Removed: {stored_prop.title[:50]}")
         
-        self._save()
+        # Save changes
+        self.save(stored)
+        
+        print(f"✅ Sync complete: {len(new_properties)} new, {len(updated_properties)} updated, {len(removed_properties)} removed")
         
         return {
-            'new': new_listings,
-            'removed': removed_listings,
-            'updated': updated_listings,
-            'total_active': len(self.listings)
+            'new': new_properties,
+            'updated': updated_properties,
+            'removed': removed_properties,
+            'total_active': len(current_urls)
         }
     
+    def get_stats(self) -> Dict:
+        """Get database statistics"""
+        stored = self.load()
+        active = [p for p in stored.values() if p.status == "active"]
+        
+        sources = {}
+        for prop in active:
+            if prop.source:
+                sources[prop.source] = sources.get(prop.source, 0) + 1
+        
+        return {
+            'total': len(stored),
+            'active': len(active),
+            'removed': len([p for p in stored.values() if p.status == "removed"]),
+            'by_source': sources
+        }

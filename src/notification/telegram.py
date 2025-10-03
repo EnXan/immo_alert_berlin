@@ -1,77 +1,104 @@
+# src/notification/telegram.py
 import requests
 import os
-from datetime import datetime
+from typing import Optional
+
 
 class TelegramNotifier:
-    def __init__(self, channel_id, bot_token=None):
+    """Simple Telegram notifications"""
+    
+    def __init__(self, bot_token: Optional[str] = None, chat_id: Optional[str] = None):
         self.bot_token = bot_token or os.getenv('TELEGRAM_BOT_TOKEN')
-        if not self.bot_token:
-            raise ValueError("Bot token must be provided either as parameter or via TELEGRAM_BOT_TOKEN environment variable")
-        self.chat_id = channel_id
-        self.api_url = f"https://api.telegram.org/bot{self.bot_token}"
-
-    def send_new_listing(self, listing):
-        wbs_status = "✅ Ja" if listing.get('wbs_required') == 'Ja' else "❌ Nein" if listing.get('wbs_required') == 'Nein' else listing.get('wbs_required', 'Nicht verfügbar')
+        self.chat_id = chat_id or os.getenv('TELEGRAM_CHANNEL_ID')
         
-        message = f"""🆕 <b>NEUE WOHNUNG GEFUNDEN!</b>
-
-<pre>📍 Objekt:        {listing.get('title', 'Nicht verfügbar')}
-
-📌 Adresse:       {listing.get('address', 'Nicht verfügbar')}
-
-💰 Preis:         {listing.get('price', 'Nicht verfügbar')}
-
-🏠 Details:       {listing.get('rooms', 'Nicht verfügbar')} Zimmer • {listing.get('size', 'Nicht verfügbar')}
-
-🎫 WBS benötigt:  {wbs_status}</pre>
-
-🔗 <b><a href="{listing.get('url', '#')}">» Jetzt ansehen «</a></b>"""
-        return self._send_message(message)
+        if not self.bot_token or not self.chat_id:
+            print("⚠️  Telegram not configured - notifications disabled")
+            self.enabled = False
+        else:
+            self.enabled = True
+            self.api_url = f"https://api.telegram.org/bot{self.bot_token}"
     
-    def send_removed_listing(self, listing):
-        # Formatiere das Datum für bessere Lesbarkeit
-        first_seen_formatted = 'Nicht verfügbar'
-        if listing.get('first_seen'):
-            try:
-                dt = datetime.fromisoformat(listing['first_seen'])
-                first_seen_formatted = dt.strftime('%d.%m.%Y um %H:%M Uhr')
-            except ValueError:
-                first_seen_formatted = listing.get('first_seen', 'Nicht verfügbar')
+    def send_new_property(self, prop) -> bool:
+        """Send new property notification"""
+        if not self.enabled:
+            return False
         
-        message = f"""❌ <b>WOHNUNG NICHT MEHR VERFÜGBAR</b>
-
-<pre>📍 Objekt:        {listing.get('title', 'Nicht verfügbar')}
-
-📌 Adresse:       {listing.get('address', 'Nicht verfügbar')}
-
-💰 Preis:         {listing.get('price', 'Nicht verfügbar')} (entfernt)
-
-🏠 Details:       {listing.get('rooms', 'Nicht verfügbar')} Zimmer
-
-⏰ Verfügbar seit: {first_seen_formatted}</pre>"""
-        return self._send_message(message)
-    
-    def send_price_update(self, update):
-        price_trend = "📈" if update.get('old_price', '').replace('€', '').replace('.', '').replace(',', '').replace(' ', '') < update.get('new_price', '').replace('€', '').replace('.', '').replace(',', '').replace(' ', '') else "📉"
+        wbs = "✅ Ja" if prop.wbs_required else "❌ Nein" if prop.wbs_required is False else "❓ N/A"
+        source_text = f"🏢 {prop.source.title()}" if prop.source else ""
         
-        message = f"""💰 <b>PREISÄNDERUNG!</b> {price_trend}
+        message = f"""🆕 <b>NEUE WOHNUNG!</b>
 
-<pre>📍 Objekt:        {update['listing'].get('title', 'Nicht verfügbar')}
+<pre>📍 {prop.title[:60]}
 
-📌 Adresse:       {update['listing'].get('address', 'Nicht verfügbar')}
+📌 {prop.address}
 
-💰 Alter Preis:   {update.get('old_price', 'Nicht verfügbar')}
+💰 {prop.price}€
 
-💰 Neuer Preis:   {update.get('new_price', 'Nicht verfügbar')}</pre>
+🏠 {prop.rooms} Zimmer • {prop.size}m²
 
-🔗 <b><a href="{update['listing'].get('url', '#')}">» Jetzt ansehen «</a></b>"""
-        return self._send_message(message)
+🎫 WBS: {wbs}
+
+{source_text}</pre>
+
+🔗 <a href="{prop.url}">Zur Anzeige</a>"""
+        
+        return self._send(message)
     
-    def _send_message(self, message):
-        payload = {
-            "chat_id": self.chat_id,
-            "text": message,
-            "parse_mode": "HTML"
-        }
-        response = requests.post(f"{self.api_url}/sendMessage", json=payload)
-        return response.json()
+    def send_price_update(self, update) -> bool:
+        """Send price update notification"""
+        if not self.enabled:
+            return False
+        
+        prop = update['property']
+        old_price = update['old_price']
+        new_price = update['new_price']
+        
+        trend = "📈" if new_price > old_price else "📉"
+        change = abs(((new_price - old_price) / old_price) * 100)
+        
+        message = f"""💰 <b>PREISÄNDERUNG!</b> {trend}
+
+<pre>📍 {prop.title[:60]}
+
+📌 {prop.address}
+
+💰 Alt: {old_price}€
+💰 Neu: {new_price}€
+
+📊 {change:.1f}% {trend}</pre>
+
+🔗 <a href="{prop.url}">Zur Anzeige</a>"""
+        
+        return self._send(message)
+    
+    def send_removed_property(self, prop) -> bool:
+        """Send removed property notification"""
+        if not self.enabled:
+            return False
+        
+        message = f"""❌ <b>NICHT MEHR VERFÜGBAR</b>
+
+<pre>📍 {prop.title[:60]}
+
+📌 {prop.address}
+
+💰 {prop.price}€</pre>"""
+        
+        return self._send(message)
+    
+    def _send(self, message: str) -> bool:
+        """Send message to Telegram"""
+        try:
+            response = requests.post(
+                f"{self.api_url}/sendMessage",
+                json={
+                    "chat_id": self.chat_id,
+                    "text": message,
+                    "parse_mode": "HTML"
+                },
+                timeout=10
+            )
+            return response.status_code == 200
+        except Exception as e:
+            print(f"❌ Telegram error: {e}")
+            return False
