@@ -25,8 +25,15 @@ def generate_js_filter_config(filter_config: FilterConfig) -> str:
             return str(value)
         elif isinstance(value, str):
             return f'"{value}"'
+        elif isinstance(value, list):
+            # Convert list to JavaScript array
+            items = [js_value(item) for item in value]
+            return f"[{', '.join(items)}]"
         else:
             return "null"
+    
+    # Get all postal codes (direct + from districts)
+    all_postal_codes = filter_config.get_all_postal_codes()
     
     js_config = f"""
 // Auto-generated filter configuration
@@ -37,7 +44,8 @@ const f = {{
     max_price: {js_value(filter_config.max_price)},
     min_size: {js_value(filter_config.min_size)},
     max_size: {js_value(filter_config.max_size)},
-    wbs_required: {js_value(filter_config.wbs_required)}
+    wbs_required: {js_value(filter_config.wbs_required)},
+    postal_codes: {js_value(all_postal_codes)}
 }};
 """
     return js_config.strip()

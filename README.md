@@ -83,6 +83,13 @@ filters:
   min_size: null # Minimum size in m²
   max_size: null # Maximum size in m²
   wbs_required: null # null = don't care, true = only with WBS, false = only without WBS
+  # Location filtering (choose one or combine):
+  postal_codes: # specific postal codes
+    - "12345"
+    - "54321" 
+  districts: # Berlin districts (recommended)
+    - "treptow-koepenick"
+    - "mitte"
 
 crawler:
   enabled_sources: # List of crawler sources to use
@@ -194,6 +201,58 @@ uv run python cli.py list --source howoge --max-price 700 --min-rooms 2
 | `min_size`     | float     | Minimum size in m²      | `45`                                                    |
 | `max_size`     | float     | Maximum size in m²      | `80`                                                    |
 | `wbs_required` | bool/null | WBS requirement filter  | `null` (any), `true` (required), `false` (not required) |
+| `postal_codes` | list      | List of postal codes    | `- "12459"` or omit for any                             |
+| `districts`    | list      | List of Berlin districts | `- "mitte"` or omit for any                            |
+
+### 📍 Location Filtering
+
+You can filter properties by location using either specific postal codes or Berlin districts:
+
+#### Option 1: Specific Postal Codes
+```yaml
+filters:
+  postal_codes:  # Only these specific postal codes
+    - "12459"
+    - "10117"
+```
+
+#### Option 2: Berlin Districts (Recommended)
+```yaml
+filters:
+  districts:  # All postal codes in these districts
+    - "treptow-koepenick"
+    - "mitte"
+```
+
+#### Option 3: Combination (Union)
+```yaml
+filters:
+  postal_codes:                     # Specific postal code
+    - "12345"
+  districts:                        # + all postal codes in Mitte
+    - "mitte"
+  # Results: Properties from postal code 12345 OR any postal code in Mitte
+```
+
+#### Option 4: No Location Filter
+```yaml
+filters:
+  # postal_codes and districts omitted = no location filtering
+  min_price: 500  # Other filters still active
+```
+
+**Available Berlin Districts:**
+- `mitte`, `friedrichshain-kreuzberg`, `pankow`, `charlottenburg-wilmersdorf`
+- `spandau`, `steglitz-zehlendorf`, `tempelhof-schoeneberg`, `neukoelln` 
+- `treptow-koepenick`, `marzahn-hellersdorf`, `lichtenberg`, `reinickendorf`
+
+**Aliases supported:** `friedrichshain`, `kreuzberg`, `charlottenburg`, `wilmersdorf`, `steglitz`, `zehlendorf`, `tempelhof`, `schoeneberg`, `treptow`, `koepenick`, `marzahn`, `hellersdorf`
+
+**How it works:**
+- Omitted fields = **no location filtering** (all areas included)
+- `postal_codes` + `districts` = **union** (OR logic) - expands search area
+- Invalid district names will show helpful error with available options
+- Properties without postal codes are filtered out when location filters are active
 
 ### Crawler Configuration
 
@@ -381,6 +440,7 @@ Try adjusting your filters in `config.yaml`:
 - Increase `max_price`
 - Increase `max_rooms`
 - Set `wbs_required: null` (accept both with/without WBS)
+- Set the `postal_codes` to empty
 
 ### Crawler fails or times out
 

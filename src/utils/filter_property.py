@@ -28,5 +28,15 @@ def filter_property(property: Property, config: FilterConfig = None) -> bool:
     if config.wbs_required is not None:
         if property.wbs_required != config.wbs_required:
             return False
+        
+    # Postal codes filter (includes both direct postal codes and districts)
+    all_postal_codes = config.get_all_postal_codes()
+    if all_postal_codes:
+        if not property.postal_code:
+            return False
+        # Convert both to strings for comparison (YAML can load postal codes as integers)
+        config_codes_str = [str(code) for code in all_postal_codes]
+        if property.postal_code not in config_codes_str:
+            return False
     
     return True

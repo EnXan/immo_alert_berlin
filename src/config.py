@@ -14,6 +14,25 @@ class FilterConfig:
     min_size: Optional[float] = None
     max_size: Optional[float] = None
     wbs_required: Optional[bool] = None
+    postal_codes: List[str] = field(default_factory=list)
+    districts: List[str] = field(default_factory=list)
+    
+    def get_all_postal_codes(self) -> List[str]:
+        """Get all postal codes from both direct postal_codes and districts."""
+        from src.utils.berlin_districts import get_postal_codes_for_districts
+        
+        # Handle None values from YAML
+        postal_codes = self.postal_codes or []
+        districts = self.districts or []
+        
+        all_codes = set(postal_codes)
+        
+        # Add postal codes from districts
+        if districts:
+            district_codes = get_postal_codes_for_districts(districts)
+            all_codes.update(district_codes)
+        
+        return sorted(list(all_codes))
 
 @dataclass
 class CrawlerConfig:
@@ -53,8 +72,15 @@ class AppConfig:
         with open(path) as f:
             data = yaml.safe_load(f)
 
+        # Handle None values from YAML for list fields
+        filters_data = data.get('filters', {})
+        if 'postal_codes' in filters_data and filters_data['postal_codes'] is None:
+            filters_data['postal_codes'] = []
+        if 'districts' in filters_data and filters_data['districts'] is None:
+            filters_data['districts'] = []
+
         return cls(
-            filters=FilterConfig(**data.get('filters', {})),
+            filters=FilterConfig(**filters_data),
             crawler=CrawlerConfig(**data.get('crawler', {})),
             notification=NotificationConfig(**data.get('notification', {})),
             database_path=Path(data.get('database_path', 'database/database.json'))

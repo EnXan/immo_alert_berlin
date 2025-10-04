@@ -8,6 +8,7 @@ from src.config import CrawlerConfig
 from crawl4ai import CrawlResult
 from typing import List, Optional
 from database.models import Property
+
 from src.utils.normalize_data import normalize_property
 from src.utils.filter_property import filter_property
 from src.utils.js_filter_generator import generate_js_filter_config
