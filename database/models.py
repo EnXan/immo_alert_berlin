@@ -1,6 +1,6 @@
 from dataclasses import dataclass, asdict
 from datetime import datetime
-from typing import Optional, Dict, Any
+from typing import Optional, Dict, Any, List
 
 
 @dataclass
@@ -12,6 +12,7 @@ class Property:
     price: float
     rooms: float
     size: float
+    postal_code: Optional[str]
     wbs_required: Optional[bool] = None
     source: Optional[str] = None
 
@@ -26,6 +27,7 @@ class StoredProperty:
     rooms: float
     size: float
     wbs_required: Optional[bool]
+    postal_code: Optional[str]
     source: Optional[str]
     first_seen: str
     last_seen: str
@@ -42,6 +44,7 @@ class StoredProperty:
             rooms=prop.rooms,
             size=prop.size,
             wbs_required=prop.wbs_required,
+            postal_code=prop.postal_code,
             source=prop.source,
             first_seen=now,
             last_seen=now,

@@ -4,21 +4,28 @@ import re
 def normalize_property(data):
     """Normalize property data to ensure consistency."""
     if isinstance(data, dict):
+        # Remove old postal_codes field if present to avoid conflicts
+        data_copy = data.copy()
+        data_copy.pop('postal_codes', None)
+        
         # Normalize each field
-        price = _normalize_price(data.get('price', ''))
-        size = _normalize_size(data.get('size', ''))
-        rooms = _normalize_rooms(data.get('rooms', ''))
-        wbs_required = _normalize_wbs(data.get('wbs_required', ''))
+        price = _normalize_price(data_copy.get('price', ''))
+        size = _normalize_size(data_copy.get('size', ''))
+        rooms = _normalize_rooms(data_copy.get('rooms', ''))
+        wbs_required = _normalize_wbs(data_copy.get('wbs_required', ''))
+        
+        postal_code = _extract_postal_code(data_copy.get('address', ''))
         
         property = Property(
-            title=data.get('title', 'No Title').strip(),
-            address=_normalize_address(data.get('address', '')),
+            title=data_copy.get('title', 'No Title').strip(),
+            address=_normalize_address(data_copy.get('address', '')),
             price=price,
             rooms=rooms,
             size=size,
             wbs_required=wbs_required,
-            source=data.get('source', 'unknown'),
-            url=data.get('url', None)
+            postal_code=postal_code,
+            source=data_copy.get('source', 'unknown'),
+            url=data_copy.get('url', None)
         )
     else:
         property = data
@@ -141,3 +148,15 @@ def _normalize_wbs(wbs: str) -> bool:
         return False
     
     return False
+
+
+def _extract_postal_code(address: str) -> str:
+    """Extract postal code from address string."""
+    if not address:
+        return ""
+    
+    # Find first 5-digit postal code (German format)
+    match = re.search(r'\b\d{5}\b', address)
+    if match:
+        return match.group(0)
+    return ""

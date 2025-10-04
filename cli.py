@@ -95,6 +95,7 @@ def test_telegram():
         rooms=2.0,
         size=55.0,
         wbs_required=False,
+        postal_code="12345",
         source="test",
         first_seen=datetime.now().isoformat(),
         last_seen=datetime.now().isoformat()

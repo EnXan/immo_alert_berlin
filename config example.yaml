@@ -7,6 +7,15 @@ filters:
   min_size: 50 # Minimum size in m² (null = 0)
   max_size: null # Maximum size in m² (null = no limit)
   wbs_required: null # null = don't care, true = only with WBS, false = only without WBS
+  postal_codes: # List of postal codes to include (empty = all)
+    - 12435
+  districts: # List of Berlin districts to include (empty = all)
+    - treptow-koepenick
+    # Available districts: mitte, friedrichshain-kreuzberg, pankow, charlottenburg-wilmersdorf,
+    # spandau, steglitz-zehlendorf, tempelhof-schoeneberg, neukoelln, treptow-koepenick,
+    # marzahn-hellersdorf, lichtenberg, reinickendorf
+    # Aliases supported: friedrichshain, kreuzberg, charlottenburg, wilmersdorf, steglitz, 
+    # zehlendorf, tempelhof, schoeneberg, treptow, koepenick, marzahn, hellersdorf
 
 crawler:
   enabled_sources: # List of crawler sources to use
