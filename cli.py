@@ -60,9 +60,13 @@ def stats():
     """Show database statistics"""
     from src.orchestrator import ImmoAlert
     from src.config import AppConfig
-
-    # Use environment-based config for CLI stats when no config path is provided
-    app_config = AppConfig.from_env()
+    from pathlib import Path
+    
+    try:
+        app_config = AppConfig.from_yaml(Path("config.yaml"))
+    except FileNotFoundError:
+        app_config = AppConfig.from_env()
+    
     app = ImmoAlert([], app_config)
     app.stats()
 

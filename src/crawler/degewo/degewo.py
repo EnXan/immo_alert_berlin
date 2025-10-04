@@ -9,6 +9,8 @@ from typing import List, Optional
 from database.models import Property
 from src.utils.normalize_data import normalize_property
 from src.utils.filter_property import filter_property
+from src.utils.js_filter_generator import generate_js_filter_config
+from pathlib import Path
 
 
 class DegewoCrawler(BaseCrawler):
@@ -19,8 +21,11 @@ class DegewoCrawler(BaseCrawler):
     async def get_listing_urls(self) -> list[str]:
         strategy = JsonCssExtractionStrategy(schema=DegewoExtractionSchema.SCHEMA_LISTING_URLS)
         js_apply_filter = None
+        js_file_path = Path(__file__).parent / "pre-filter.js"
         if self.crawler_config.pre_filter:
-            js_apply_filter = DegewoExtractionSchema.LISTING_URLS_PRE_FILTER_JS
+            js_config = generate_js_filter_config(self.filter_config)
+            js_content = js_file_path.read_text(encoding='utf-8')
+            js_apply_filter = js_config + "\n\n" + js_content
         all_links = set()
         async with AsyncWebCrawler() as crawler:
             result_initial: CrawlResult = await crawler.arun(

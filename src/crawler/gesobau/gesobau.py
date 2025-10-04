@@ -1,6 +1,7 @@
 import asyncio
 import json
-from crawl4ai import AsyncWebCrawler, CrawlerRunConfig, JsonCssExtractionStrategy
+from pathlib import Path
+from crawl4ai import AsyncWebCrawler, BrowserConfig, CrawlerRunConfig, JsonCssExtractionStrategy
 from src.crawler.base import BaseCrawler
 from src.crawler.gesobau.extraction_schemas import GesobauExtractionSchema
 from src.config import CrawlerConfig
@@ -9,6 +10,7 @@ from typing import List, Optional
 from database.models import Property
 from src.utils.normalize_data import normalize_property
 from src.utils.filter_property import filter_property
+from src.utils.js_filter_generator import generate_js_filter_config
 
 
 class GesobauCrawler(BaseCrawler):
@@ -18,14 +20,19 @@ class GesobauCrawler(BaseCrawler):
 
     async def get_listing_urls(self) -> list[str]:
         strategy = JsonCssExtractionStrategy(schema=GesobauExtractionSchema.SCHEMA_LISTING_URLS)
-        js_apply_filter = GesobauExtractionSchema.LISTING_URLS_PRE_FILTER_JS #TODO: Muss noch dynamisch an Filter angepasst werden
+        js_apply_filter = None
+        js_file_path = Path(__file__).parent / "pre-filter.js"
+        if self.crawler_config.pre_filter:
+            js_config = generate_js_filter_config(self.filter_config)
+            js_content = js_file_path.read_text(encoding='utf-8')
+            js_apply_filter = js_config + "\n\n" + js_content
         all_links = set()
         async with AsyncWebCrawler() as crawler:
             result_initial: CrawlResult = await crawler.arun(
                 url=self.SEARCH_URL,
                 config=CrawlerRunConfig(
                     extraction_strategy=strategy,
-                    #js_code=GesobauExtractionSchema.LISTING_URLS_PRE_FILTER_JS,
+                    js_code=js_apply_filter,
                     session_id="gesobau_session",
                     wait_for=GesobauExtractionSchema.WAIT_FOR_ELEMENT
                 )
