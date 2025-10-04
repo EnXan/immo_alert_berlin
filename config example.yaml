@@ -1,11 +1,11 @@
 # config.yaml
 filters:
-  min_rooms: 2 # Minimum number of rooms
-  max_rooms: 3 # Maximum number of rooms
-  min_price: null # Minimum price (null = no limit)
-  max_price: 900 # Maximum price in EUR
-  min_size: null # Minimum size in m²
-  max_size: null # Maximum size in m²
+  min_rooms: 2 # Minimum number of rooms (null = 0)
+  max_rooms: 3 # Maximum number of rooms (null = no limit)
+  min_price: null # Minimum price (null = 0)
+  max_price: 800 # Maximum price in EUR (null = no limit)
+  min_size: 50 # Minimum size in m² (null = 0)
+  max_size: null # Maximum size in m² (null = no limit)
   wbs_required: null # null = don't care, true = only with WBS, false = only without WBS
 
 crawler:

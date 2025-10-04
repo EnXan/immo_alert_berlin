@@ -209,6 +209,7 @@ crawler:
     - stadtundland # ✅ Enabled
     - vonovia # ✅ Enabled
     - wbm # ✅ Enabled
+  pre_filter: true # Whether to use pre-filtering (if supported by the source) - Enhances performance
 ```
 
 **Available sources:**
