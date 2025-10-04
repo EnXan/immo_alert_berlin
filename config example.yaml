@@ -1,15 +1,15 @@
 # config.yaml
 filters:
-  min_rooms: 2           # Minimum number of rooms
-  max_rooms: 3           # Maximum number of rooms
-  min_price: null        # Minimum price (null = no limit)
-  max_price: 900         # Maximum price in EUR
-  min_size: null         # Minimum size in m²
-  max_size: null         # Maximum size in m²
-  wbs_required: null     # null = don't care, true = only with WBS, false = only without WBS
+  min_rooms: 2 # Minimum number of rooms (null = 0)
+  max_rooms: 3 # Maximum number of rooms (null = no limit)
+  min_price: null # Minimum price (null = 0)
+  max_price: 800 # Maximum price in EUR (null = no limit)
+  min_size: 50 # Minimum size in m² (null = 0)
+  max_size: null # Maximum size in m² (null = no limit)
+  wbs_required: null # null = don't care, true = only with WBS, false = only without WBS
 
 crawler:
-  enabled_sources:       # List of crawler sources to use
+  enabled_sources: # List of crawler sources to use
     - degewo
     - gesobau
     - gewobag
@@ -17,11 +17,12 @@ crawler:
     - stadtundland
     - vonovia
     - wbm
+  pre_filter: true # Whether to use pre-filtering (if supported by the source) - Enhances performance
 
 notification:
   telegram_enabled: true
   notify_new_listings: true
   notify_price_changes: true
-  notify_removals: false  # Set to true if you want removal notifications
+  notify_removals: false # Set to true if you want removal notifications
 
 database_path: "database/database.json"

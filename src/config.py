@@ -26,6 +26,8 @@ class CrawlerConfig:
     def is_enabled(self, source: str) -> bool:
         """Check if a crawler source is enabled"""
         return source.lower() in [s.lower() for s in self.enabled_sources]
+    
+    pre_filter: bool = True
 
 @dataclass
 class NotificationConfig:

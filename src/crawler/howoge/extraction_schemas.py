@@ -41,23 +41,3 @@ class HowogeExtractionSchema:
     }
     WAIT_FOR_ELEMENT = "#immoobject-list-2 > div"
     WAIT_FOR_LISTING_ELEMENT = "#main > div.ce-wrapper.flat-detail__stage.background-color-petrol-brighter > div > div.data > dl > div:nth-child(1) > dd"
-    LISTING_URLS_PRE_FILTER_JS = """
-    // Wait for page to load
-    await new Promise(resolve => setTimeout(resolve, 2000));
-    
-    // 1. Click on 2 rooms filter
-    const roomsButton = document.querySelector('#rooms-2');
-    if (roomsButton) {
-        roomsButton.click();
-        await new Promise(resolve => setTimeout(resolve, 500));
-    }
-    
-    // 2. Click the search submit button
-    const searchSubmitButton = document.querySelector('#flat-search-filter--form > div.container > div.filters > div > div.col-12.col-lg-2.col__submit.d-flex.align-items-end > button');
-    if (searchSubmitButton) {
-        searchSubmitButton.click();
-    }
-    
-    // Wait for search results to load
-    await new Promise(resolve => setTimeout(resolve, 3000));
-    """

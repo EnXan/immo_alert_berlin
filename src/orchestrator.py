@@ -2,15 +2,16 @@ import asyncio
 from typing import List
 from database.database import PropertyDatabase
 from database.models import Property
+from src.config import AppConfig
 from src.notification.telegram import TelegramNotifier
 
 
 class ImmoAlert:
     """Main orchestrator"""
-    
-    def __init__(self, crawlers: List, db_path: str = "database/database.json"):
+
+    def __init__(self, crawlers: List, app_config: AppConfig):
         self.crawlers = crawlers
-        self.db = PropertyDatabase(db_path)
+        self.db = PropertyDatabase(str(app_config.database_path) or "database/database.json")
         self.notifier = TelegramNotifier()
         
         print(f"🚀 ImmoAlert initialized with {len(crawlers)} crawler(s)")

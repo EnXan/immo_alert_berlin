@@ -87,8 +87,9 @@ class WBMCrawler(BaseCrawler):
 
 
     
-async def crawl():
-    wbm_crawler = WBMCrawler(config=CrawlerConfig())
+async def crawl(crawler_config: CrawlerConfig | None = None):
+    cfg = crawler_config or CrawlerConfig()
+    wbm_crawler = WBMCrawler(crawler_config=cfg)
     url_list = await wbm_crawler.get_listing_urls()
     property_list = await wbm_crawler.parse_listings(urls=url_list)
     return property_list

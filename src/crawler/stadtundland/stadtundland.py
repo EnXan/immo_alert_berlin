@@ -1,5 +1,6 @@
 import asyncio
 import json
+from pathlib import Path
 from crawl4ai import AsyncWebCrawler, CrawlerRunConfig, JsonCssExtractionStrategy
 from src.crawler.base import BaseCrawler
 from src.crawler.stadtundland.extraction_schemas import StadtUndLandExtractionSchema
@@ -9,6 +10,8 @@ from typing import List, Optional
 from database.models import Property
 from src.utils.normalize_data import normalize_property
 from src.utils.filter_property import filter_property
+from src.utils.js_filter_generator import generate_js_filter_config
+from crawl4ai import BrowserConfig
 import re
 
 
@@ -21,14 +24,19 @@ class StadtUndLandCrawler(BaseCrawler):
         # Not working properly due to unknown reason there using markdown extraction
         #strategy = JsonCssExtractionStrategy(schema=StadtUndLandExtractionSchema.SCHEMA_LISTING_URLS)
         markdown_extraction_pattern = r'https://stadtundland\.de/wohnungssuche/(?!#)[^\s\)]+(?=%2F|\)|\s|$)'
-        js_apply_filter = StadtUndLandExtractionSchema.LISTING_URLS_PRE_FILTER_JS #TODO: Muss noch dynamisch an Filter angepasst werden
+        js_apply_filter = None
+        js_file_path = Path(__file__).parent / "pre-filter.js"
+        if self.crawler_config.pre_filter:
+            js_config = generate_js_filter_config(self.filter_config)
+            js_content = js_file_path.read_text(encoding='utf-8')
+            js_apply_filter = js_config + "\n\n" + js_content
         all_links = set()
         async with AsyncWebCrawler() as crawler:
             result_initial: CrawlResult = await crawler.arun(
                 url=self.SEARCH_URL,
                 config=CrawlerRunConfig(
                     #extraction_strategy=strategy,
-                    #js_code=StadtUndLandExtractionSchema.LISTING_URLS_PRE_FILTER_JS,
+                    js_code=js_apply_filter,
                     session_id="stadtundland_session",
                     wait_for=StadtUndLandExtractionSchema.WAIT_FOR
                 )
@@ -122,8 +130,9 @@ class StadtUndLandCrawler(BaseCrawler):
 
 
     
-async def crawl():
-    stadtundland_crawler = StadtUndLandCrawler(config=CrawlerConfig())
+async def crawl(crawler_config: CrawlerConfig | None = None):
+    cfg = crawler_config or CrawlerConfig()
+    stadtundland_crawler = StadtUndLandCrawler(crawler_config=cfg)
     url_list = await stadtundland_crawler.get_listing_urls()
     property_list = await stadtundland_crawler.parse_listings(urls=url_list)
     return property_list
