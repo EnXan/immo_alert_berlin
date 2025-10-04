@@ -31,18 +31,27 @@ def run(config):
         print(f"⚠️  Config file not found, using environment variables")
         app_config = AppConfig.from_env()
     
-    # Initialize crawlers with filter config
-    crawlers = [
-        DegewoCrawler(app_config.filters),
-        GewobagCrawler(app_config.filters),
-        GesobauCrawler(app_config.filters),
-        HowogeCrawler(app_config.filters),
-        StadtUndLandCrawler(app_config.filters),
-        VonoviaCrawler(app_config.filters),
-        WBMCrawler(app_config.filters)
-    ]
+    # Initialize crawlers with filter config.
+    # Respect `enabled_sources` from the loaded config (case-insensitive).
+    crawler_classes = {
+        'degewo': DegewoCrawler,
+        'gewobag': GewobagCrawler,
+        'gesobau': GesobauCrawler,
+        'howoge': HowogeCrawler,
+        'stadtundland': StadtUndLandCrawler,
+        'vonovia': VonoviaCrawler,
+        'wbm': WBMCrawler,
+    }
+
+    crawlers = []
+    for name, cls in crawler_classes.items():
+        if app_config.crawler.is_enabled(name):
+            # pass both filter config and the shared crawler config
+            crawlers.append(cls(app_config.filters, app_config.crawler))
+        else:
+            print(f"\u26a0\ufe0f  Skipping disabled crawler: {name}")
     
-    app = ImmoAlert(crawlers, str(app_config.database_path))
+    app = ImmoAlert(crawlers, app_config)
     asyncio.run(app.run())
 
 
@@ -50,8 +59,11 @@ def run(config):
 def stats():
     """Show database statistics"""
     from src.orchestrator import ImmoAlert
-    
-    app = ImmoAlert([])
+    from src.config import AppConfig
+
+    # Use environment-based config for CLI stats when no config path is provided
+    app_config = AppConfig.from_env()
+    app = ImmoAlert([], app_config)
     app.stats()
 
 

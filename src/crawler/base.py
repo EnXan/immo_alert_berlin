@@ -1,13 +1,14 @@
 from abc import ABC, abstractmethod
 from typing import List, Optional
-from src.config import FilterConfig
+from src.config import CrawlerConfig, FilterConfig
 from database.models import Property
         
 class BaseCrawler(ABC):
     """Abstract base class for all property crawlers"""
 
-    def __init__(self, filter_config: FilterConfig = None):
+    def __init__(self, filter_config: FilterConfig = None, crawler_config: CrawlerConfig = None):
         self.filter_config = filter_config or FilterConfig()
+        self.crawler_config = crawler_config or CrawlerConfig()
         self.source_name = self.__class__.__name__.replace('Crawler', '').lower()
 
     @abstractmethod

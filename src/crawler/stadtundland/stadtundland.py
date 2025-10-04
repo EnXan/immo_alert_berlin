@@ -122,8 +122,9 @@ class StadtUndLandCrawler(BaseCrawler):
 
 
     
-async def crawl():
-    stadtundland_crawler = StadtUndLandCrawler(config=CrawlerConfig())
+async def crawl(crawler_config: CrawlerConfig | None = None):
+    cfg = crawler_config or CrawlerConfig()
+    stadtundland_crawler = StadtUndLandCrawler(crawler_config=cfg)
     url_list = await stadtundland_crawler.get_listing_urls()
     property_list = await stadtundland_crawler.parse_listings(urls=url_list)
     return property_list

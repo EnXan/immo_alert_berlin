@@ -87,8 +87,9 @@ class HowogeCrawler(BaseCrawler):
 
 
     
-async def crawl():
-    howoge_crawler = HowogeCrawler(config=CrawlerConfig())
+async def crawl(crawler_config: CrawlerConfig | None = None):
+    cfg = crawler_config or CrawlerConfig()
+    howoge_crawler = HowogeCrawler(crawler_config=cfg)
     url_list = await howoge_crawler.get_listing_urls()
     property_list = await howoge_crawler.parse_listings(urls=url_list)
     return property_list

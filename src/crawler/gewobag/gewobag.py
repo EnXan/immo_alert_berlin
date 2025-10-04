@@ -87,8 +87,9 @@ class GewobagCrawler(BaseCrawler):
 
 
     
-async def crawl():
-    gewobag_crawler = GewobagCrawler(config=CrawlerConfig())
+async def crawl(crawler_config: CrawlerConfig | None = None):
+    cfg = crawler_config or CrawlerConfig()
+    gewobag_crawler = GewobagCrawler(crawler_config=cfg)
     url_list = await gewobag_crawler.get_listing_urls()
     property_list = await gewobag_crawler.parse_listings(urls=url_list)
     return property_list

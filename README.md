@@ -76,16 +76,16 @@ Create `config.yaml` in the project root:
 ```yaml
 # config.yaml
 filters:
-  min_rooms: 2           # Minimum number of rooms
-  max_rooms: 3           # Maximum number of rooms
-  min_price: null        # Minimum price (null = no limit)
-  max_price: 900         # Maximum price in EUR (warm)
-  min_size: null         # Minimum size in m²
-  max_size: null         # Maximum size in m²
-  wbs_required: null     # null = don't care, true = only with WBS, false = only without WBS
+  min_rooms: 2 # Minimum number of rooms
+  max_rooms: 3 # Maximum number of rooms
+  min_price: null # Minimum price (null = no limit)
+  max_price: 900 # Maximum price in EUR (warm)
+  min_size: null # Minimum size in m²
+  max_size: null # Maximum size in m²
+  wbs_required: null # null = don't care, true = only with WBS, false = only without WBS
 
 crawler:
-  enabled_sources:       # List of crawler sources to use
+  enabled_sources: # List of crawler sources to use
     - degewo
     - gesobau
     - gewobag
@@ -93,12 +93,13 @@ crawler:
     - stadtundland
     - vonovia
     - wbm
+  pre_filter: true # uses js to actually click the filter settings on the websites if available. This makes the crawling faster. If it fails just deactivate it
 
 notification:
   telegram_enabled: true
   notify_new_listings: true
   notify_price_changes: true
-  notify_removals: false  # Set to true if you want removal notifications
+  notify_removals: false # Set to true if you want removal notifications
 
 database_path: "database/database.json"
 ```
@@ -184,15 +185,15 @@ uv run python cli.py list --source howoge --max-price 700 --min-rooms 2
 
 ### Filter Options
 
-| Option | Type | Description | Example |
-|--------|------|-------------|---------|
-| `min_rooms` | float | Minimum number of rooms | `2` |
-| `max_rooms` | float | Maximum number of rooms | `3` |
-| `min_price` | float | Minimum rent in EUR | `500` |
-| `max_price` | float | Maximum rent in EUR | `900` |
-| `min_size` | float | Minimum size in m² | `45` |
-| `max_size` | float | Maximum size in m² | `80` |
-| `wbs_required` | bool/null | WBS requirement filter | `null` (any), `true` (required), `false` (not required) |
+| Option         | Type      | Description             | Example                                                 |
+| -------------- | --------- | ----------------------- | ------------------------------------------------------- |
+| `min_rooms`    | float     | Minimum number of rooms | `2`                                                     |
+| `max_rooms`    | float     | Maximum number of rooms | `3`                                                     |
+| `min_price`    | float     | Minimum rent in EUR     | `500`                                                   |
+| `max_price`    | float     | Maximum rent in EUR     | `900`                                                   |
+| `min_size`     | float     | Minimum size in m²      | `45`                                                    |
+| `max_size`     | float     | Maximum size in m²      | `80`                                                    |
+| `wbs_required` | bool/null | WBS requirement filter  | `null` (any), `true` (required), `false` (not required) |
 
 ### Crawler Configuration
 
@@ -201,16 +202,17 @@ Enable or disable specific crawlers in your `config.yaml`:
 ```yaml
 crawler:
   enabled_sources:
-    - degewo        # ✅ Enabled
-    - gesobau       # ✅ Enabled
-    - gewobag       # ✅ Enabled
-    - howoge        # ✅ Enabled
-    - stadtundland  # ✅ Enabled
-    - vonovia       # ✅ Enabled
-    - wbm           # ✅ Enabled
+    - degewo # ✅ Enabled
+    - gesobau # ✅ Enabled
+    - gewobag # ✅ Enabled
+    - howoge # ✅ Enabled
+    - stadtundland # ✅ Enabled
+    - vonovia # ✅ Enabled
+    - wbm # ✅ Enabled
 ```
 
 **Available sources:**
+
 - `degewo` - Degewo
 - `gesobau` - GESOBAU
 - `gewobag` - Gewobag
@@ -234,10 +236,11 @@ crawler:
 ```yaml
 crawler:
   enabled_sources:
-    - degewo  # Only test Degewo
+    - degewo # Only test Degewo
 ```
 
 This allows you to:
+
 - ✅ Test individual crawlers
 - ✅ Disable slow or problematic sources
 - ✅ Focus on specific housing companies
@@ -245,13 +248,13 @@ This allows you to:
 
 ### Environment Variables
 
-| Variable | Required | Description |
-|----------|----------|-------------|
-| `TELEGRAM_BOT_TOKEN` | Yes | Your Telegram bot token from BotFather |
-| `TELEGRAM_CHANNEL_ID` | Yes | Your channel/chat ID (starts with `-`) |
-| `MIN_ROOMS` | No | Override min_rooms from config |
-| `MAX_ROOMS` | No | Override max_rooms from config |
-| `MAX_PRICE` | No | Override max_price from config |
+| Variable              | Required | Description                            |
+| --------------------- | -------- | -------------------------------------- |
+| `TELEGRAM_BOT_TOKEN`  | Yes      | Your Telegram bot token from BotFather |
+| `TELEGRAM_CHANNEL_ID` | Yes      | Your channel/chat ID (starts with `-`) |
+| `MIN_ROOMS`           | No       | Override min_rooms from config         |
+| `MAX_ROOMS`           | No       | Override max_rooms from config         |
+| `MAX_PRICE`           | No       | Override max_price from config         |
 
 **Note**: Environment variables take precedence over config file settings.
 
@@ -262,22 +265,24 @@ This allows you to:
 1. **Fork this repository** to your GitHub account
 
 2. **Add secrets** to your repository:
+
    - Go to: Settings → Secrets and variables → Actions → New repository secret
    - Add `TELEGRAM_BOT_TOKEN`
    - Add `TELEGRAM_CHANNEL_ID`
 
 3. **Enable GitHub Actions**:
+
    - Go to the Actions tab
    - Click "I understand my workflows, go ahead and enable them"
 
 4. **Customize schedule** (optional):
-   
+
    Edit `.github/workflows/scraper.yml`:
-   
+
    ```yaml
    on:
      schedule:
-       - cron: '0 5-18 * * 1-5'  # Every hour, 5AM-6PM, Mon-Fri
+       - cron: "0 5-18 * * 1-5" # Every hour, 5AM-6PM, Mon-Fri
    ```
 
 5. **Manual trigger**:
@@ -292,15 +297,15 @@ This allows you to:
 
 ## 🏢 Monitored Housing Portals
 
-| Portal | Status | Default Filters |
-|--------|--------|-----------------|
-| [Degewo](https://www.degewo.de) | ✅ Active | Configurable |
-| [GESOBAU](https://www.gesobau.de) | ✅ Active | Configurable |
-| [Gewobag](https://www.gewobag.de) | ✅ Active | Configurable |
-| [HOWOGE](https://www.howoge.de) | ✅ Active | Configurable |
-| [Stadt und Land](https://stadtundland.de) | ✅ Active | Configurable |
-| [WBM](https://www.wbm.de) | ✅ Active | Configurable |
-| [Vonovia](https://www.vonovia.de) | ✅ Active | Configurable |
+| Portal                                    | Status    | Default Filters |
+| ----------------------------------------- | --------- | --------------- |
+| [Degewo](https://www.degewo.de)           | ✅ Active | Configurable    |
+| [GESOBAU](https://www.gesobau.de)         | ✅ Active | Configurable    |
+| [Gewobag](https://www.gewobag.de)         | ✅ Active | Configurable    |
+| [HOWOGE](https://www.howoge.de)           | ✅ Active | Configurable    |
+| [Stadt und Land](https://stadtundland.de) | ✅ Active | Configurable    |
+| [WBM](https://www.wbm.de)                 | ✅ Active | Configurable    |
+| [Vonovia](https://www.vonovia.de)         | ✅ Active | Configurable    |
 
 ## 📊 Project Structure
 
@@ -365,11 +370,13 @@ export TELEGRAM_CHANNEL_ID="your_id"
 ### No properties found
 
 This is normal! It means:
+
 - ✅ Crawlers are working
 - ✅ Filters are applied correctly
 - ❌ No properties match your criteria right now
 
 Try adjusting your filters in `config.yaml`:
+
 - Increase `max_price`
 - Increase `max_rooms`
 - Set `wbs_required: null` (accept both with/without WBS)
@@ -379,6 +386,7 @@ Try adjusting your filters in `config.yaml`:
 Some crawlers may be temporarily unavailable. You can:
 
 1. **Disable problematic crawlers**:
+
    ```yaml
    crawler:
      enabled_sources:
@@ -406,6 +414,7 @@ Some crawlers may be temporarily unavailable. You can:
 ## 🤝 Contributing
 
 Contributions are welcome! Especially for:
+
 - Additional Berlin housing portals
 - Improved CSS selectors when sites change
 - Enhanced notification formatting
@@ -444,6 +453,7 @@ MIT License - feel free to use this tool for your apartment hunt!
 ## ⚠️ Disclaimer
 
 This tool is for **personal use only**. Please:
+
 - ✅ Respect the terms of service of scraped websites
 - ✅ Use reasonable crawl intervals (don't spam)
 - ✅ Consider the `robots.txt` files
@@ -462,4 +472,4 @@ This tool is for **personal use only**. Please:
 
 **Good luck with your apartment hunt! 🏠🔑**
 
-*Found this helpful? Star the repo ⭐ and share with friends looking for apartments in Berlin!*
+_Found this helpful? Star the repo ⭐ and share with friends looking for apartments in Berlin!_

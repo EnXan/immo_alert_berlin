@@ -108,8 +108,9 @@ class GesobauCrawler(BaseCrawler):
 
 
     
-async def crawl():
-    gesobau_crawler = GesobauCrawler(config=CrawlerConfig())
+async def crawl(crawler_config: CrawlerConfig | None = None):
+    cfg = crawler_config or CrawlerConfig()
+    gesobau_crawler = GesobauCrawler(crawler_config=cfg)
     url_list = await gesobau_crawler.get_listing_urls()
     property_list = await gesobau_crawler.parse_listings(urls=url_list)
     return property_list

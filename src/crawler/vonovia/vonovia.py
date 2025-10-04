@@ -86,8 +86,9 @@ class VonoviaCrawler(BaseCrawler):
 
 
     
-async def crawl():
-    vonovia_crawler = VonoviaCrawler(config=CrawlerConfig())
+async def crawl(crawler_config: CrawlerConfig | None = None):
+    cfg = crawler_config or CrawlerConfig()
+    vonovia_crawler = VonoviaCrawler(crawler_config=cfg)
     url_list = await vonovia_crawler.get_listing_urls()
     property_list = await vonovia_crawler.parse_listings(urls=url_list)
     return property_list
